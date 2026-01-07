@@ -11,6 +11,15 @@
     <link rel="apple-touch-icon" href="https://i.postimg.cc/L5FjT3mW/41-sin-titulo-20260107172921.png">
     <link rel="icon" href="https://i.postimg.cc/L5FjT3mW/41-sin-titulo-20260107172921.png">
     
+<link rel="manifest" href="manifest.json">
+<script>
+  if ('serviceWorker' in navigator) {
+    navigator.serviceWorker.register('sw.js')
+      .then(() => console.log("Servicio activo"))
+      .catch(err => console.log("Error:", err));
+  }
+</script>
+
     <style>
         :root {
             --accent: #0081C9;
