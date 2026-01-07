@@ -1,7 +1,7 @@
 {
   "name": "Poli Grupo 2",
   "short_name": "Poli 2",
-  "start_url": "index.html",
+  "start_url": "./index.html",
   "display": "standalone",
   "background_color": "#F1F6F9",
   "theme_color": "#0081C9",
@@ -9,8 +9,7 @@
     {
       "src": "https://i.postimg.cc/L5FjT3mW/41-sin-titulo-20260107172921.png",
       "sizes": "512x512",
-      "type": "image/png",
-      "purpose": "any maskable"
+      "type": "image/png"
     }
   ]
 }
