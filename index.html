@@ -20,12 +20,30 @@
         [data-theme="dark"] {
             --bg: #121212; --dark: #000000; --card-bg: #1E1E1E; --text-color: #E0E0E0;
         }
-        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: var(--text-color); transition: 0.3s; padding-top: env(safe-area-inset-top); }
+        body { 
+            font-family: 'Segoe UI', sans-serif; 
+            background: var(--bg); 
+            margin: 0; 
+            color: var(--text-color); 
+            transition: background-color 0.4s, color 0.4s; 
+            padding-top: env(safe-area-inset-top); 
+            position: relative;
+        }
+
+        /* Overlay when sidebar is open */
+        body.menu-open::before {
+            content: "";
+            position: fixed;
+            top: 0; left: 0; right: 0; bottom: 0;
+            background: rgba(0,0,0,0.4);
+            z-index: 1999;
+            animation: fadeIn 0.2s;
+        }
 
         /* Sidebar */
         .sidebar {
             position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
-            background: var(--dark); color: white; transition: 0.3s; z-index: 2000;
+            background: var(--dark); color: white; transition: left 0.3s ease, transform 0.3s ease; z-index: 2000;
             padding: 20px; box-sizing: border-box; overflow-y: auto;
         }
         .sidebar.open { left: 0; }
@@ -36,12 +54,21 @@
             background: var(--accent); color: white; border: none;
             padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+            transition: all 0.2s ease;
+        }
+        .menu-fab:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 20px rgba(0,0,0,0.4);
+        }
+        .menu-fab:active {
+            transform: scale(0.95);
         }
 
         .main-content { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
         .categoria-box { 
             background: var(--card-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
+            transition: background-color 0.4s, border-color 0.4s;
         }
         h3 { margin-top: 0; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
 
@@ -50,7 +77,16 @@
         .producto-row span { font-size: 14px; white-space: nowrap; min-width: 80px; }
         select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex: 1; background: var(--card-bg); color: var(--text-color); min-width: 0; }
         
-        .add-btn { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px; height: 42px; width: 48px; font-size: 20px; flex-shrink: 0; }
+        .add-btn, .fast-btn, .btn-qty, .btn-footer {
+            transition: all 0.2s ease;
+        }
+
+        .add-btn { 
+            background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px; 
+            height: 42px; width: 48px; font-size: 20px; flex-shrink: 0; 
+        }
+        .add-btn:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
+        .add-btn:active { transform: scale(0.95); }
 
         /* Botones Rápidos */
         .fast-btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
@@ -59,49 +95,104 @@
             border-radius: 10px; font-weight: bold; cursor: pointer; flex: 1;
             font-size: 13px; white-space: nowrap; text-align: center;
         }
+        .fast-btn:hover { transform: scale(1.03); box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
+        .fast-btn:active { transform: scale(0.98); }
 
-        /* TICKET - Corrección de botones horizontales */
-        .ticket { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-top: 25px; border: 2px solid var(--accent); }
-        .item-pedido { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #ccc; }
-        
+        /* TICKET */
+        .ticket { 
+            background: var(--card-bg); padding: 20px; border-radius: 20px; margin-top: 25px; 
+            border: 2px solid var(--accent); transition: background-color 0.4s, border-color 0.4s; 
+        }
+        .item-pedido { 
+            display: flex; justify-content: space-between; align-items: center; 
+            padding: 12px 0; border-bottom: 1px dashed #ccc;
+            opacity: 1;
+            transform: translateX(0);
+            transition: opacity 0.3s, transform 0.3s;
+        }
+
         .controles { 
-            display: flex; 
-            align-items: center; 
-            gap: 12px; /* Espacio entre botones y número */
-            justify-content: flex-end;
-            min-width: 140px;
+            display: flex; align-items: center; gap: 12px; justify-content: flex-end; min-width: 140px;
         }
 
         .btn-qty { 
-            background: var(--accent); 
-            color: white; 
-            border: none; 
-            cursor: pointer; 
-            font-weight: bold; 
-            border-radius: 50%; 
-            width: 34px; 
-            height: 34px; 
-            font-size: 20px; 
-            display: flex; 
-            align-items: center; 
-            justify-content: center;
-            flex-shrink: 0;
+            background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; 
+            border-radius: 50%; width: 34px; height: 34px; font-size: 20px; 
+            display: flex; align-items: center; justify-content: center; flex-shrink: 0;
         }
+        .btn-qty:hover { transform: scale(1.1); }
+        .btn-qty:active { transform: scale(0.95); }
 
         .qty-num { font-weight: bold; font-size: 16px; min-width: 20px; text-align: center; }
 
         .item-info { flex: 1; padding-right: 10px; }
         .item-subtotal { font-weight: bold; min-width: 70px; text-align: right; }
 
-        .nota-mesa { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; box-sizing: border-box; border: 1px solid var(--warning); background: rgba(255, 177, 0, 0.1); color: var(--text-color); font-family: inherit; resize: none; }
-        .total-box { background: var(--dark); color: white; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: 20px; }
-        .btn-footer { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; font-size: 16px; }
-        .mesa-item { background: #394867; color: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; border-left: 5px solid transparent; }
-        .mesa-item.cobrada { border-left-color: var(--danger); background: #4b1d1d; }
-        .tiempo-badge { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; float: right; }
-        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; align-items: center; justify-content: center; }
-        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; color: var(--text-color); }
+        .nota-mesa { 
+            width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; 
+            box-sizing: border-box; border: 1px solid var(--warning); 
+            background: rgba(255, 177, 0, 0.1); color: var(--text-color); 
+            font-family: inherit; resize: none; 
+        }
+        .total-box { 
+            background: var(--dark); color: white; padding: 20px; border-radius: 15px; 
+            display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: 20px;
+            transition: background-color 0.4s;
+        }
+        .btn-footer { 
+            width: 100%; padding: 15px; border: none; border-radius: 12px; 
+            font-weight: bold; cursor: pointer; margin-top: 10px; color: white; font-size: 16px;
+        }
+
+        .mesa-item { 
+            background: #394867; color: white; padding: 12px; border-radius: 10px; 
+            margin-bottom: 10px; cursor: pointer; border-left: 5px solid transparent;
+            opacity: 0;
+            transform: translateY(10px);
+            animation: popIn 0.4s forwards;
+        }
+        .mesa-item.cobrada { 
+            border-left-color: var(--danger); background: #4b1d1d; 
+        }
+        .tiempo-badge { 
+            font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 2px 6px; 
+            border-radius: 4px; float: right; 
+        }
+
+        .modal { 
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%; 
+            background: rgba(0,0,0,0.8); z-index: 3000; 
+            display: flex; align-items: center; justify-content: center; 
+        }
+        .modal-content { 
+            background: var(--card-bg); padding: 25px; border-radius: 20px; 
+            width: 90%; max-width: 400px; color: var(--text-color); 
+        }
         .hidden { display: none !important; }
+
+        /* Animaciones */
+        @keyframes fadeIn {
+            from { opacity: 0; } to { opacity: 1; }
+        }
+
+        @keyframes popIn {
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        /* Toast para WhatsApp */
+        #toast {
+            position: fixed; bottom: 20px; left: 50%; transform: translateX(-50%);
+            background: var(--success); color: white; padding: 12px 24px;
+            border-radius: 50px; z-index: 5000; opacity: 0;
+            pointer-events: none;
+        }
+
+        @keyframes fadeInOut {
+            0% { opacity: 0; transform: translate(-50%, 20px); }
+            10% { opacity: 1; transform: translate(-50%, 0); }
+            90% { opacity: 1; transform: translate(-50%, 0); }
+            100% { opacity: 0; transform: translate(-50%, 20px); }
+        }
     </style>
 </head>
 <body data-theme="light">
@@ -283,6 +374,9 @@
         </div>
     </div>
 
+    <!-- Toast para WhatsApp -->
+    <div id="toast"></div>
+
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
@@ -366,7 +460,9 @@
             document.getElementById('total-precio').innerText = `$${total}`;
             const btnContainer = document.getElementById('btn-container');
             if (m.cobrada) {
-                btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir</button><button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button><button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
+                btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir</button>
+                <button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button>
+                <button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
             } else {
                 btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>`;
             }
@@ -387,7 +483,9 @@
             let totalGral = 0; detalle.innerHTML = "";
             historial.forEach(v => {
                 totalGral += v.total;
-                detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between"><span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b></div>`;
+                detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between">
+                    <span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b>
+                </div>`;
             });
             document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
             modal.classList.remove('hidden');
@@ -396,8 +494,14 @@
         function reiniciarCaja() { if(confirm("¿Limpiar historial?")) { historial = []; save(); location.reload(); } }
         function reabrir() { mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); }
         function liberar() { if(confirm("¿Limpiar mesa?")) { delete mesas[mesaActual]; mesaActual = null; save(); location.reload(); } }
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
-        
+
+        function toggleMenu() { 
+            const sidebar = document.getElementById('sidebar');
+            const body = document.body;
+            sidebar.classList.toggle('open');
+            body.classList.toggle('menu-open');
+        }
+
         function enviarWhatsapp() {
             const m = mesas[mesaActual];
             let msg = `*Poli Grupo 2 - Mesa: ${mesaActual}*\n`;
@@ -408,6 +512,16 @@
             if(m.nota) msg += `_Nota: ${m.nota}_\n`;
             msg += `*TOTAL: $${total}*`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+            mostrarToast("¡Pedido enviado a WhatsApp! ✅");
+        }
+
+        function mostrarToast(msg) {
+            let toast = document.getElementById('toast');
+            toast.innerText = msg;
+            toast.style.animation = 'none';
+            // Forzar reflow
+            void toast.offsetWidth;
+            toast.style.animation = 'fadeInOut 2.5s forwards';
         }
 
         function renderizarMesas() {
@@ -422,6 +536,7 @@
                 </div>`;
             }
         }
+
         setInterval(renderizarMesas, 30000);
         window.onload = () => { 
             const savedTheme = localStorage.getItem('theme') || 'light';
