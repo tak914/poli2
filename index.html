@@ -2,7 +2,8 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+    <!-- ✅ Viewport sin zoom (evita doble toque en iOS) -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Poli Grupo 2</title>
     
     <link rel="manifest" href="./manifest.json">
@@ -21,7 +22,7 @@
             --bg: #121212; --dark: #000000; --card-bg: #1E1E1E; --text-color: #E0E0E0;
         }
 
-        /* 🔥 Elimina el "tap highlight" en iOS */
+        /* ✅ Elimina el "tap highlight" en iOS */
         * {
             -webkit-tap-highlight-color: transparent;
         }
@@ -53,11 +54,11 @@
             visibility: visible;
         }
 
-        /* Sidebar estilo iOS Glassmorphism */
+        /* ✅ Sidebar: fondo hasta el notch, contenido respetando safe area */
         .sidebar {
             position: fixed;
             left: -300px;
-            top: env(safe-area-inset-top, 0px); /* 👈 evita el notch en iOS */
+            top: 0; /* llega hasta el borde superior */
             width: 280px;
             height: 100%;
             background: rgba(255, 255, 255, 0.25);
@@ -67,6 +68,7 @@
             transition: left 0.3s ease;
             z-index: 2000;
             padding: 20px;
+            padding-top: calc(20px + env(safe-area-inset-top, 0px)); /* contenido bajo el notch */
             box-sizing: border-box;
             overflow-y: auto;
             border-right: 1px solid rgba(255, 255, 255, 0.25);
@@ -259,8 +261,8 @@
         <div class="sidebar-header">
             <h2 style="margin:0;">📍 Poli 2</h2>
             <button id="theme-toggle" onclick="toggleTheme()" style="background:none; border:none; font-size:24px; cursor:pointer;">🌙</button>
-            <!-- ✅ Botón de cerrar SIN color fijo → se adapta al tema -->
-            <button onclick="toggleMenu()" style="background:none; border:none; font-size:30px; cursor:pointer;">✕</button>
+            <!-- ✅ Botón de cerrar SIEMPRE AZUL -->
+            <button onclick="toggleMenu()" style="background:none; border:none; font-size:30px; cursor:pointer; color:var(--accent);">✕</button>
         </div>
         <button class="btn-footer" style="background:var(--accent); margin-bottom:20px;" onclick="crearMesa()">+ Nueva Mesa</button>
         <div id="lista-mesas"></div>
@@ -268,7 +270,6 @@
         <button class="btn-footer" style="background:var(--success)" onclick="verCierreCaja()">📊 Cierre de Caja</button>
     </aside>
 
-    <!-- 🔁 Contenido principal (SIN envoltorio de blur) -->
     <main class="main-content">
         <div id="pantalla-vacia" style="text-align:center; margin-top:80px;">
             <img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png" alt="Logo" style="width:250px; border-radius:20px;">
@@ -278,6 +279,7 @@
         <div id="area-operativa" class="hidden">
             <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
 
+            <!-- Secciones de productos (igual que antes) -->
             <div class="categoria-box">
                 <h3>🍔 Comidas</h3>
                 <div class="producto-row">
@@ -549,11 +551,11 @@
             modal.classList.remove('hidden');
         }
 
-        // ✅ ¡Ahora borra también las mesas!
+        // ✅ Reiniciar día: borra mesas Y cierre
         function reiniciarCaja() {
             if (confirm("¿Limpiar historial y todas las mesas?")) {
                 historial = [];
-                mesas = {}; // ← ¡esto es clave!
+                mesas = {};
                 save();
                 location.reload();
             }
@@ -562,7 +564,7 @@
         function reabrir() { mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); }
         function liberar() { if(confirm("¿Limpiar mesa?")) { delete mesas[mesaActual]; save(); location.reload(); } }
 
-        // ✅ Toggle mejorado con overlay
+        // ✅ Toggle con overlay
         function toggleMenu() { 
             const sidebar = document.getElementById('sidebar');
             const body = document.body;
