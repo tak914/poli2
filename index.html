@@ -37,18 +37,18 @@
             padding-top: env(safe-area-inset-top); 
         }
 
-        #menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.12);
-            z-index: 1999;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease;
-        }
+#menu-overlay {
+    position: fixed;
+    top: env(safe-area-inset-top, 0px); /* ← empieza debajo de la barra de estado */
+    left: 0;
+    width: 100%;
+    height: calc(100% - env(safe-area-inset-top, 0px)); /* ← altura reducida */
+    background: rgba(0, 0, 0, 0.12);
+    z-index: 1999;
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 0.2s ease;
+}
         body.menu-open #menu-overlay {
             opacity: 1;
             visibility: visible;
