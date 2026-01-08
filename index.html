@@ -27,7 +27,6 @@
             color: var(--text-color); 
             transition: background-color 0.4s, color 0.4s; 
             padding-top: env(safe-area-inset-top); 
-            position: relative;
         }
 
         /* Overlay when sidebar is open */
@@ -40,21 +39,25 @@
             animation: fadeIn 0.2s;
         }
 
-        /* Blur wrapper for Gaussian blur */
-        .blur-wrapper {
-            transition: backdrop-filter 0.3s ease;
-        }
-
-        body.menu-open .blur-wrapper {
-            backdrop-filter: blur(8px);
-            -webkit-backdrop-filter: blur(8px);
-        }
-
-        /* Sidebar */
+        /* Sidebar con Gaussian blur (glassmorphism) */
         .sidebar {
-            position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
-            background: var(--dark); color: white; transition: left 0.3s ease; z-index: 2000;
-            padding: 20px; box-sizing: border-box; overflow-y: auto;
+            position: fixed;
+            left: -300px;
+            top: 0;
+            width: 280px;
+            height: 100%;
+            /* Fondo semi-transparente + blur */
+            background: rgba(33, 42, 62, 0.85);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            color: white;
+            transition: left 0.3s ease;
+            z-index: 2000;
+            padding: 20px;
+            box-sizing: border-box;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 2px 0 15px rgba(0, 0, 0, 0.25);
         }
         .sidebar.open { left: 0; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
@@ -155,14 +158,15 @@
         }
 
         .mesa-item { 
-            background: #394867; color: white; padding: 12px; border-radius: 10px; 
+            background: rgba(57, 72, 103, 0.7); /* ligeramente transparente */
+            color: white; padding: 12px; border-radius: 10px; 
             margin-bottom: 10px; cursor: pointer; border-left: 5px solid transparent;
             opacity: 0;
             transform: translateY(10px);
             animation: popIn 0.4s forwards;
         }
         .mesa-item.cobrada { 
-            border-left-color: var(--danger); background: #4b1d1d; 
+            border-left-color: var(--danger); background: rgba(75, 29, 29, 0.8); 
         }
         .tiempo-badge { 
             font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 2px 6px; 
@@ -206,160 +210,158 @@
         <button class="btn-footer" style="background:var(--success)" onclick="verCierreCaja()">📊 Cierre de Caja</button>
     </aside>
 
-    <div class="blur-wrapper">
-        <main class="main-content">
-            <div id="pantalla-vacia" style="text-align:center; margin-top:80px;">
-                <img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png" alt="Logo" style="width:250px; border-radius:20px;">
-                <h2>Bienvenido a Poli grupo 2☀️</h2>
-            </div>
+    <main class="main-content">
+        <div id="pantalla-vacia" style="text-align:center; margin-top:80px;">
+            <img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png" alt="Logo" style="width:250px; border-radius:20px;">
+            <h2>Bienvenido a Poli grupo 2☀️</h2>
+        </div>
 
-            <div id="area-operativa" class="hidden">
-                <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
+        <div id="area-operativa" class="hidden">
+            <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
 
-                <div class="categoria-box">
-                    <h3>🍔 Comidas</h3>
-                    <div class="producto-row">
-                        <span>🍟 Papas:</span>
-                        <select id="papas-select">
-                            <option value="Papas Cono,3000">Cono $3000</option>
-                            <option value="Bandeja Común,5000">Bandeja Común $5000</option>
-                            <option value="Bandeja Cheddar,6000">Bandeja Cheddar $6000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('papas-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🍕 Pizzas:</span>
-                        <select id="pizza-select">
-                            <option value="Pizza Común,8000">Común $8000</option>
-                            <option value="Pizza Especial,10000">Especial $10000</option>
-                            <option value="Pizza Calabresa,11000">Calabresa $11000</option>
-                            <option value="Pizza Provenzal,10000">Provenzal $10000</option>
-                            <option value="Pizza Napolitana,10000">Napolitana $10000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('pizza-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🥪 Sándwich:</span>
-                        <select id="sand-select">
-                            <option value="Mila Simple,7000">Mila Simple $7000</option>
-                            <option value="Mila Completo,9000">Mila Completo $9000</option>
-                            <option value="S. Miga,5000">Miga $5000</option>
-                            <option value="Carlitos,6000">Carlitos $6000</option>
-                            <option value="Triples,7000">Triples $7000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('sand-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🥧 Tartas:</span>
-                        <select id="tarta-select">
-                            <option value="Tarta J&Q,10000">J&Q Entera $10000</option>
-                            <option value="1/2 Tarta J&Q,6000">J&Q Media $6000</option>
-                            <option value="Tarta Verdura,10000">Verdura Entera $10000</option>
-                            <option value="1/2 Tarta Verdura,6000">Verdura Media $6000</option>
-                            <option value="Tarta Pollo,11000">Pollo Entera $11000</option>
-                            <option value="1/2 Tarta Pollo,7000">Pollo Media $7000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('tarta-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🥟 Empan.:</span>
-                        <select id="empa-select">
-                            <option value="Empa. Carne c/u,1200">Carne $1200</option>
-                            <option value="Docena Carne,12000">Docena Carne $12k</option>
-                            <option value="Empa. Pollo c/u,1200">Pollo $1200</option>
-                            <option value="Docena Pollo,12000">Docena Pollo $12k</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('empa-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🌭 Panchos:</span>
-                        <select id="pancho-select">
-                            <option value="Pancho,1500">Simple $1500</option>
-                            <option value="Combo Pancho+Lata,3000">Combo (+Lata) $3000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('pancho-select')">+</button>
-                    </div>
-                    <div class="fast-btn-group">
-                        <button class="fast-btn" onclick="agregarProd('Dona', 700)">🍩 Dona $700</button>
-                        <button class="fast-btn" onclick="agregarProd('Torta Frita', 500)">🥯 T. Frita $500</button>
-                        <button class="fast-btn" onclick="agregarProd('Picada', 20000)">🧀 Picada $20k</button>
-                    </div>
+            <div class="categoria-box">
+                <h3>🍔 Comidas</h3>
+                <div class="producto-row">
+                    <span>🍟 Papas:</span>
+                    <select id="papas-select">
+                        <option value="Papas Cono,3000">Cono $3000</option>
+                        <option value="Bandeja Común,5000">Bandeja Común $5000</option>
+                        <option value="Bandeja Cheddar,6000">Bandeja Cheddar $6000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('papas-select')">+</button>
                 </div>
-
-                <div class="categoria-box">
-                    <h3>🍹 Bebidas</h3>
-                    <div class="producto-row">
-                        <span>🥤 Pepsi/7up:</span>
-                        <select id="gaseosa-select">
-                            <option value="Pepsi 500ml,2000">Pepsi 500ml $2000</option>
-                            <option value="Pepsi Lata,2000">Pepsi Lata $2000</option>
-                            <option value="Pepsi 1.5L,4000">Pepsi 1.5L $4000</option>
-                            <option value="7up 500ml,2000">7up 500ml $2000</option>
-                            <option value="7up Lata,2000">7up Lata $2000</option>
-                            <option value="7up 1.5L,4000">7up 1.5L $4000</option>
-                            <option value="Mirinda 1.5L,3500">Mirinda 1.5L $3500</option>
-                            <option value="H2O 1.5L,3500">H2O Citrus $3500</option>
-                            <option value="Paso Toros 1.5L,4000">P. Toros 1.5L $4000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('gaseosa-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🍺 Cervezas:</span>
-                        <select id="birra-select">
-                            <option value="Quilmes 1L,4500">Quilmes 1L $4500</option>
-                            <option value="Quilmes Negra 1L,4500">Quilmes Negra $4500</option>
-                            <option value="Budweiser 1L,5000">Budweiser 1L $5000</option>
-                            <option value="Lata Budweiser,2000">Lata Bud $2000</option>
-                            <option value="Brahma 1L,4500">Brahma 1L $4500</option>
-                            <option value="Stella 1L,4500">Stella 1L $4500</option>
-                            <option value="Corona 330ml,3500">Corona 330ml $3500</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('birra-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>💧 Agua/Gator.:</span>
-                        <select id="agua-select">
-                            <option value="Agua 500ml,2000">Agua 500ml $2000</option>
-                            <option value="Agua 1.5L,2500">Agua 1.5L $2500</option>
-                            <option value="Gatorade,5000">Gatorade $5000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('agua-select')">+</button>
-                    </div>
-                    <div class="producto-row">
-                        <span>🍷 Vinos/Jarra:</span>
-                        <select id="vino-select">
-                            <option value="Nanpe Tinto,4000">Nanpe Tinto $4000</option>
-                            <option value="Alma Mora,8000">Alma Mora $8000</option>
-                            <option value="Chacabuco Blanco,8000">Chacabuco B. $8000</option>
-                            <option value="Jarra Fernet,8000">Jarra Fernet $8000</option>
-                            <option value="Jarra Gancia,6000">Jarra Gancia $6000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('vino-select')">+</button>
-                    </div>
+                <div class="producto-row">
+                    <span>🍕 Pizzas:</span>
+                    <select id="pizza-select">
+                        <option value="Pizza Común,8000">Común $8000</option>
+                        <option value="Pizza Especial,10000">Especial $10000</option>
+                        <option value="Pizza Calabresa,11000">Calabresa $11000</option>
+                        <option value="Pizza Provenzal,10000">Provenzal $10000</option>
+                        <option value="Pizza Napolitana,10000">Napolitana $10000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('pizza-select')">+</button>
                 </div>
-
-                <div class="categoria-box">
-                    <h3>🍓 Postres</h3>
-                    <div class="producto-row">
-                        <span>🍧 Ens. Fruta:</span>
-                        <select id="fruit-select">
-                            <option value="Ens. Fruta 250ml,2000">250ml $2000</option>
-                            <option value="Ens. Fruta 500ml,4000">500ml $4000</option>
-                        </select>
-                        <button class="add-btn" onclick="agregarDeSelect('fruit-select')">+</button>
-                    </div>
+                <div class="producto-row">
+                    <span>🥪 Sándwich:</span>
+                    <select id="sand-select">
+                        <option value="Mila Simple,7000">Mila Simple $7000</option>
+                        <option value="Mila Completo,9000">Mila Completo $9000</option>
+                        <option value="S. Miga,5000">Miga $5000</option>
+                        <option value="Carlitos,6000">Carlitos $6000</option>
+                        <option value="Triples,7000">Triples $7000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('sand-select')">+</button>
                 </div>
-
-                <div class="ticket">
-                    <h3>📝 Mesa <span id="nombre-mesa-ticket"></span></h3>
-                    <textarea id="nota-input" class="nota-mesa" placeholder="Notas del pedido (Ej: Papas sin sal)..." onchange="guardarNota()"></textarea>
-                    <div id="lista-pedidos"></div>
-                    <div class="total-box"><span>TOTAL</span><span id="total-precio">$0</span></div>
-                    <div id="btn-container"></div>
+                <div class="producto-row">
+                    <span>🥧 Tartas:</span>
+                    <select id="tarta-select">
+                        <option value="Tarta J&Q,10000">J&Q Entera $10000</option>
+                        <option value="1/2 Tarta J&Q,6000">J&Q Media $6000</option>
+                        <option value="Tarta Verdura,10000">Verdura Entera $10000</option>
+                        <option value="1/2 Tarta Verdura,6000">Verdura Media $6000</option>
+                        <option value="Tarta Pollo,11000">Pollo Entera $11000</option>
+                        <option value="1/2 Tarta Pollo,7000">Pollo Media $7000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('tarta-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>🥟 Empan.:</span>
+                    <select id="empa-select">
+                        <option value="Empa. Carne c/u,1200">Carne $1200</option>
+                        <option value="Docena Carne,12000">Docena Carne $12k</option>
+                        <option value="Empa. Pollo c/u,1200">Pollo $1200</option>
+                        <option value="Docena Pollo,12000">Docena Pollo $12k</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('empa-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>🌭 Panchos:</span>
+                    <select id="pancho-select">
+                        <option value="Pancho,1500">Simple $1500</option>
+                        <option value="Combo Pancho+Lata,3000">Combo (+Lata) $3000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('pancho-select')">+</button>
+                </div>
+                <div class="fast-btn-group">
+                    <button class="fast-btn" onclick="agregarProd('Dona', 700)">🍩 Dona $700</button>
+                    <button class="fast-btn" onclick="agregarProd('Torta Frita', 500)">🥯 T. Frita $500</button>
+                    <button class="fast-btn" onclick="agregarProd('Picada', 20000)">🧀 Picada $20k</button>
                 </div>
             </div>
-        </main>
-    </div> <!-- fin .blur-wrapper -->
+
+            <div class="categoria-box">
+                <h3>🍹 Bebidas</h3>
+                <div class="producto-row">
+                    <span>🥤 Pepsi/7up:</span>
+                    <select id="gaseosa-select">
+                        <option value="Pepsi 500ml,2000">Pepsi 500ml $2000</option>
+                        <option value="Pepsi Lata,2000">Pepsi Lata $2000</option>
+                        <option value="Pepsi 1.5L,4000">Pepsi 1.5L $4000</option>
+                        <option value="7up 500ml,2000">7up 500ml $2000</option>
+                        <option value="7up Lata,2000">7up Lata $2000</option>
+                        <option value="7up 1.5L,4000">7up 1.5L $4000</option>
+                        <option value="Mirinda 1.5L,3500">Mirinda 1.5L $3500</option>
+                        <option value="H2O 1.5L,3500">H2O Citrus $3500</option>
+                        <option value="Paso Toros 1.5L,4000">P. Toros 1.5L $4000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('gaseosa-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>🍺 Cervezas:</span>
+                    <select id="birra-select">
+                        <option value="Quilmes 1L,4500">Quilmes 1L $4500</option>
+                        <option value="Quilmes Negra 1L,4500">Quilmes Negra $4500</option>
+                        <option value="Budweiser 1L,5000">Budweiser 1L $5000</option>
+                        <option value="Lata Budweiser,2000">Lata Bud $2000</option>
+                        <option value="Brahma 1L,4500">Brahma 1L $4500</option>
+                        <option value="Stella 1L,4500">Stella 1L $4500</option>
+                        <option value="Corona 330ml,3500">Corona 330ml $3500</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('birra-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>💧 Agua/Gator.:</span>
+                    <select id="agua-select">
+                        <option value="Agua 500ml,2000">Agua 500ml $2000</option>
+                        <option value="Agua 1.5L,2500">Agua 1.5L $2500</option>
+                        <option value="Gatorade,5000">Gatorade $5000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('agua-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>🍷 Vinos/Jarra:</span>
+                    <select id="vino-select">
+                        <option value="Nanpe Tinto,4000">Nanpe Tinto $4000</option>
+                        <option value="Alma Mora,8000">Alma Mora $8000</option>
+                        <option value="Chacabuco Blanco,8000">Chacabuco B. $8000</option>
+                        <option value="Jarra Fernet,8000">Jarra Fernet $8000</option>
+                        <option value="Jarra Gancia,6000">Jarra Gancia $6000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('vino-select')">+</button>
+                </div>
+            </div>
+
+            <div class="categoria-box">
+                <h3>🍓 Postres</h3>
+                <div class="producto-row">
+                    <span>🍧 Ens. Fruta:</span>
+                    <select id="fruit-select">
+                        <option value="Ens. Fruta 250ml,2000">250ml $2000</option>
+                        <option value="Ens. Fruta 500ml,4000">500ml $4000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('fruit-select')">+</button>
+                </div>
+            </div>
+
+            <div class="ticket">
+                <h3>📝 Mesa <span id="nombre-mesa-ticket"></span></h3>
+                <textarea id="nota-input" class="nota-mesa" placeholder="Notas del pedido (Ej: Papas sin sal)..." onchange="guardarNota()"></textarea>
+                <div id="lista-pedidos"></div>
+                <div class="total-box"><span>TOTAL</span><span id="total-precio">$0</span></div>
+                <div id="btn-container"></div>
+            </div>
+        </div>
+    </main>
 
     <div id="modal-caja" class="modal hidden">
         <div class="modal-content">
@@ -506,7 +508,7 @@
             if(m.nota) msg += `_Nota: ${m.nota}_\n`;
             msg += `*TOTAL: $${total}*`;
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-            // ✅ Sin toast de confirmación
+            // ✅ Sin toast, sin vibración
         }
 
         function renderizarMesas() {
