@@ -230,19 +230,24 @@
     let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
     let mesaActual = null;
 
-    // --- FUNCIÓN DE VIBRACIÓN (HAPTIC FEEDBACK) ---
     function vibrar(tipo) {
-        if (!("vibrate" in navigator)) return; // Si el celu no soporta vibrar, no hace nada
-        
-        if (tipo === 'suave') {
-            navigator.vibrate(40); // Vibración cortita para clics normales
-        } else if (tipo === 'exito') {
-            navigator.vibrate([50, 30, 50]); // Vibración doble para cobrar/exito
-        } else if (tipo === 'error') {
-            navigator.vibrate(200); // Vibración larga para errores/borrar
-        }
+    if (!navigator.vibrate) {
+        console.log("El navegador no soporta vibración");
+        return;
     }
-
+    
+    try {
+        if (tipo === 'suave') {
+            navigator.vibrate(60); // Un toque un poco más fuerte (60ms)
+        } else if (tipo === 'exito') {
+            navigator.vibrate([70, 50, 70]); // Vibración doble clara
+        } else if (tipo === 'error') {
+            navigator.vibrate(250); // Vibración larga
+        }
+    } catch (e) {
+        console.log("Error al intentar vibrar", e);
+    }
+}
     function save() { 
         localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
         localStorage.setItem('poli_historial', JSON.stringify(historial));
