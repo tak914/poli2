@@ -2,12 +2,13 @@
 <html lang="es">
 <head>
     <meta charset="UTF-8">
-    <!-- ✅ Viewport sin zoom (evita doble toque en iOS) -->
+    <!-- ✅ Viewport sin zoom -->
     <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
     <title>Poli Grupo 2</title>
     
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#0081C9">
+    <!-- ✅ theme-color neutro (se actualiza con JS al cambiar tema) -->
+    <meta name="theme-color" content="#F1F6F9">
     <meta name="mobile-web-app-capable" content="yes">
     <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
     <link rel="apple-touch-icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png">
@@ -22,9 +23,16 @@
             --bg: #121212; --dark: #000000; --card-bg: #1E1E1E; --text-color: #E0E0E0;
         }
 
-        /* ✅ Elimina el "tap highlight" en iOS */
+        /* Elimina el tap highlight en iOS */
         * {
             -webkit-tap-highlight-color: transparent;
+        }
+
+        /* Elimina el borde de foco en dispositivos táctiles */
+        @media (hover: none) and (pointer: coarse) {
+            *:focus {
+                outline: none;
+            }
         }
 
         body { 
@@ -36,7 +44,7 @@
             padding-top: env(safe-area-inset-top); 
         }
 
-        /* Overlay para cerrar menú al tocar fuera */
+        /* Overlay para cerrar menú */
         #menu-overlay {
             position: fixed;
             top: 0;
@@ -54,11 +62,11 @@
             visibility: visible;
         }
 
-        /* ✅ Sidebar: fondo hasta el notch, contenido respetando safe area */
+        /* Sidebar con safe area y blur */
         .sidebar {
             position: fixed;
             left: -300px;
-            top: 0; /* llega hasta el borde superior */
+            top: 0;
             width: 280px;
             height: 100%;
             background: rgba(255, 255, 255, 0.25);
@@ -68,7 +76,7 @@
             transition: left 0.3s ease;
             z-index: 2000;
             padding: 20px;
-            padding-top: calc(20px + env(safe-area-inset-top, 0px)); /* contenido bajo el notch */
+            padding-top: calc(20px + env(safe-area-inset-top, 0px));
             box-sizing: border-box;
             overflow-y: auto;
             border-right: 1px solid rgba(255, 255, 255, 0.25);
@@ -259,9 +267,11 @@
 
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
-            <h2 style="margin:0;">📍 Poli 2</h2>
+            <!-- ✅ Emoji de ubicación reemplazado por imagen -->
+            <h2 style="margin:0;">
+                <img src="https://i.postimg.cc/76L71FK9/round-pushpin-1f4cd-(1).png" alt="📍" style="width:20px; vertical-align:-1px;"> Poli 2
+            </h2>
             <button id="theme-toggle" onclick="toggleTheme()" style="background:none; border:none; font-size:24px; cursor:pointer;">🌙</button>
-            <!-- ✅ Botón de cerrar SIEMPRE AZUL -->
             <button onclick="toggleMenu()" style="background:none; border:none; font-size:30px; cursor:pointer; color:var(--accent);">✕</button>
         </div>
         <button class="btn-footer" style="background:var(--accent); margin-bottom:20px;" onclick="crearMesa()">+ Nueva Mesa</button>
@@ -273,13 +283,18 @@
     <main class="main-content">
         <div id="pantalla-vacia" style="text-align:center; margin-top:80px;">
             <img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png" alt="Logo" style="width:250px; border-radius:20px;">
-            <h2>Bienvenido a Poli grupo 2☀️</h2>
-        </div>
+            <!-- ✅ Emoji de sol reemplazado por imagen -->
+            <h2>
+    Bienvenido a Poli grupo 2
+    <img src="https://i.postimg.cc/1tTBYGYg/round-pushpin-1f4cd.png" 
+         alt="☀️" 
+         style="width:22px; vertical-align:-3px; margin-left:5px;">
+</h2>        </div>
 
         <div id="area-operativa" class="hidden">
             <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
 
-            <!-- Secciones de productos (igual que antes) -->
+            <!-- Secciones de productos (sin cambios) -->
             <div class="categoria-box">
                 <h3>🍔 Comidas</h3>
                 <div class="producto-row">
@@ -424,7 +439,6 @@
         </div>
     </main>
 
-    <!-- Overlay para cerrar menú -->
     <div id="menu-overlay" class="hidden" onclick="toggleMenu()"></div>
 
     <div id="modal-caja" class="modal hidden">
@@ -451,12 +465,31 @@
             localStorage.setItem('poli_historial', JSON.stringify(historial));
         }
 
-        function toggleTheme() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            document.getElementById('theme-toggle').innerText = isDark ? '🌙' : '☀️';
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        }
+function toggleTheme() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    const newTheme = isDark ? 'light' : 'dark';
+    document.body.setAttribute('data-theme', newTheme);
+    
+    // Actualiza el color de la barra en Android
+    const themeColor = newTheme === 'dark' ? '#121212' : '#F1F6F9';
+    document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
+    
+    // Guarda el nuevo estado
+    localStorage.setItem('theme', newTheme);
+    
+    // ✅ Actualiza el ícono del botón (siempre muestra el PRÓXIMO estado)
+    updateThemeToggleIcon();
+}
+function updateThemeToggleIcon() {
+    const isDark = document.body.getAttribute('data-theme') === 'dark';
+    const themeToggle = document.getElementById('theme-toggle');
+    if (isDark) {
+        themeToggle.innerHTML = '<img src="https://i.postimg.cc/1tTBYGYg/round-pushpin-1f4cd.png" alt="☀️" style="width:20px; height:20px; vertical-align:-3px;">';
+    } else {
+        themeToggle.innerHTML = '🌙';
+    }
+}
+
 
         function crearMesa() {
             const n = prompt("Nombre/Nro Mesa:");
@@ -469,7 +502,7 @@
             mesaActual = n;
             document.getElementById('pantalla-vacia').classList.add('hidden');
             document.getElementById('area-operativa').classList.remove('hidden');
-            document.getElementById('titulo-mesa').innerText = `📍 Mesa: ${n}`;
+            document.getElementById('titulo-mesa').innerText = `Mesa: ${n}`;
             document.getElementById('nombre-mesa-ticket').innerText = n;
             document.getElementById('nota-input').value = mesas[n].nota || "";
             actualizarTicket(); renderizarMesas();
@@ -551,7 +584,6 @@
             modal.classList.remove('hidden');
         }
 
-        // ✅ Reiniciar día: borra mesas Y cierre
         function reiniciarCaja() {
             if (confirm("¿Limpiar historial y todas las mesas?")) {
                 historial = [];
@@ -564,7 +596,6 @@
         function reabrir() { mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); }
         function liberar() { if(confirm("¿Limpiar mesa?")) { delete mesas[mesaActual]; save(); location.reload(); } }
 
-        // ✅ Toggle con overlay
         function toggleMenu() { 
             const sidebar = document.getElementById('sidebar');
             const body = document.body;
@@ -609,10 +640,11 @@
 
         setInterval(renderizarMesas, 30000);
         window.onload = () => { 
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            renderizarMesas(); 
-        };
+    const savedTheme = localStorage.getItem('theme') || 'light';
+    document.body.setAttribute('data-theme', savedTheme);
+    renderizarMesas(); 
+    updateThemeToggleIcon(); // ← ¡esta línea es clave!
+};
     </script>
 </body>
 </html>
