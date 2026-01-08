@@ -220,147 +220,190 @@
         </div>
     </div>
 
-    <script>
-        // Registro de PWA
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
-        }
+   <script>
+    // Registro de PWA
+    if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
+    }
 
-        let mesas = JSON.parse(localStorage.getItem('poli_vFinal')) || {};
-        let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
-        let mesaActual = null;
+    let mesas = JSON.parse(localStorage.getItem('poli_vFinal')) || {};
+    let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
+    let mesaActual = null;
 
-        function save() { 
-            localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
-            localStorage.setItem('poli_historial', JSON.stringify(historial));
-        }
-
-        function toggleTheme() {
-            const isDark = document.body.getAttribute('data-theme') === 'dark';
-            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-            document.getElementById('theme-toggle').innerText = isDark ? '🌙' : '☀️';
-            localStorage.setItem('theme', isDark ? 'light' : 'dark');
-        }
-
-        function crearMesa() {
-            const n = prompt("Nombre/Nro Mesa:");
-            if (!n || mesas[n]) return;
-            mesas[n] = { items: {}, cobrada: false, nota: "", inicio: Date.now() };
-            save(); renderizarMesas(); seleccionarMesa(n); toggleMenu();
-        }
-
-        function seleccionarMesa(n) {
-            mesaActual = n;
-            document.getElementById('pantalla-vacia').classList.add('hidden');
-            document.getElementById('area-operativa').classList.remove('hidden');
-            document.getElementById('titulo-mesa').innerText = `📍 Mesa: ${n}`;
-            document.getElementById('nombre-mesa-ticket').innerText = n;
-            document.getElementById('nota-input').value = mesas[n].nota || "";
-            actualizarTicket(); renderizarMesas();
-        }
-
-        function agregarDeSelect(id) {
-            const [n, p] = document.getElementById(id).value.split(',');
-            agregarProd(n, parseInt(p));
-        }
-
-        function agregarProd(n, p) {
-            if (!mesaActual || mesas[mesaActual].cobrada) return;
-            mesas[mesaActual].items[n] = mesas[mesaActual].items[n] || { precio: p, qty: 0 };
-            mesas[mesaActual].items[n].qty++;
-            save(); actualizarTicket();
-        }
-
-        function cambiarQty(n, d) {
-            if (mesas[mesaActual].cobrada) return;
-            mesas[mesaActual].items[n].qty += d;
-            if (mesas[mesaActual].items[n].qty <= 0) delete mesas[mesaActual].items[n];
-            save(); actualizarTicket();
-        }
-
-        function guardarNota() { if (mesaActual) { mesas[mesaActual].nota = document.getElementById('nota-input').value; save(); } }
-
-        function actualizarTicket() {
-            const m = mesas[mesaActual];
-            const container = document.getElementById('lista-pedidos');
-            container.innerHTML = ""; let total = 0;
-            for (let n in m.items) {
-                const i = m.items[n]; total += i.precio * i.qty;
-                container.innerHTML += `<div class="item-pedido">
-                    <div><b>${n}</b><br><small>$${i.precio}</small></div>
-                    <div class="controles">
-                        <button class="btn-qty" onclick="cambiarQty('${n}', -1)">-</button>
-                        <b>${i.qty}</b>
-                        <button class="btn-qty" onclick="cambiarQty('${n}', 1)">+</button>
-                        <b style="width:70px; text-align:right">$${i.precio * i.qty}</b>
-                    </div>
-                </div>`;
-            }
-            document.getElementById('total-precio').innerText = `$${total}`;
-            const btnContainer = document.getElementById('btn-container');
-            if (m.cobrada) {
-                btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir Mesa</button><button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button><button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
-            } else {
-                btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>`;
-            }
-        }
-
-        function cobrar() {
-            const m = mesas[mesaActual]; m.cobrada = true;
-            let totalMesa = 0; for(let n in m.items) totalMesa += m.items[n].precio * m.items[n].qty;
-            const index = historial.findIndex(v => v.mesa === mesaActual);
-            const venta = { mesa: mesaActual, total: totalMesa, fecha: new Date().toLocaleTimeString() };
-            if (index !== -1) historial[index] = venta; else historial.push(venta);
-            save(); actualizarTicket(); renderizarMesas();
-        }
-
-        function verCierreCaja() {
-            const modal = document.getElementById('modal-caja');
-            const detalle = document.getElementById('caja-detalle');
-            let totalGral = 0; detalle.innerHTML = "";
-            historial.forEach(v => {
-                totalGral += v.total;
-                detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between"><span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b></div>`;
-            });
-            document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
-            modal.classList.remove('hidden');
-        }
-
-        function reiniciarCaja() { if(confirm("¿Limpiar historial diario?")) { historial = []; save(); location.reload(); } }
-        function reabrir() { mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); }
-        function liberar() { if(confirm("¿Limpiar mesa?")) { delete mesas[mesaActual]; mesaActual = null; save(); location.reload(); } }
-        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+    // --- FUNCIÓN DE VIBRACIÓN (HAPTIC FEEDBACK) ---
+    function vibrar(tipo) {
+        if (!("vibrate" in navigator)) return; // Si el celu no soporta vibrar, no hace nada
         
-        function enviarWhatsapp() {
-            const m = mesas[mesaActual];
-            let msg = `*Poli Grupo 2 - Mesa: ${mesaActual}*\n`;
-            let total = 0;
-            for (let n in m.items) {
-                const i = m.items[n]; msg += `- ${i.qty}x ${n}: $${i.precio * i.qty}\n`; total += i.precio * i.qty;
-            }
-            if(m.nota) msg += `_Nota: ${m.nota}_\n`;
-            msg += `*TOTAL: $${total}*`;
-            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        if (tipo === 'suave') {
+            navigator.vibrate(40); // Vibración cortita para clics normales
+        } else if (tipo === 'exito') {
+            navigator.vibrate([50, 30, 50]); // Vibración doble para cobrar/exito
+        } else if (tipo === 'error') {
+            navigator.vibrate(200); // Vibración larga para errores/borrar
         }
+    }
 
-        function renderizarMesas() {
-            const lista = document.getElementById('lista-mesas');
-            lista.innerHTML = "";
-            for (let n in mesas) {
-                const m = mesas[n];
-                const min = Math.floor((Date.now() - m.inicio) / 60000);
-                let t = 0; for (let i in m.items) t += m.items[i].precio * m.items[i].qty;
-                lista.innerHTML += `<div class="mesa-item ${m.cobrada ? 'cobrada' : ''}" onclick="seleccionarMesa('${n}'); toggleMenu();">
-                    <span class="tiempo-badge">⏱️ ${min}m</span>Mesa: ${n} <br><b>$${t}</b>
-                </div>`;
-            }
+    function save() { 
+        localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
+        localStorage.setItem('poli_historial', JSON.stringify(historial));
+    }
+
+    function toggleTheme() {
+        vibrar('suave');
+        const isDark = document.body.getAttribute('data-theme') === 'dark';
+        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+        document.getElementById('theme-toggle').innerText = isDark ? '🌙' : '☀️';
+        localStorage.setItem('theme', isDark ? 'light' : 'dark');
+    }
+
+    function crearMesa() {
+        const n = prompt("Nombre/Nro Mesa:");
+        if (!n || mesas[n]) return;
+        vibrar('exito');
+        mesas[n] = { items: {}, cobrada: false, nota: "", inicio: Date.now() };
+        save(); renderizarMesas(); seleccionarMesa(n); toggleMenu();
+    }
+
+    function seleccionarMesa(n) {
+        vibrar('suave');
+        mesaActual = n;
+        document.getElementById('pantalla-vacia').classList.add('hidden');
+        document.getElementById('area-operativa').classList.remove('hidden');
+        document.getElementById('titulo-mesa').innerText = `📍 Mesa: ${n}`;
+        document.getElementById('nombre-mesa-ticket').innerText = n;
+        document.getElementById('nota-input').value = mesas[n].nota || "";
+        actualizarTicket(); renderizarMesas();
+    }
+
+    function agregarDeSelect(id) {
+        const [n, p] = document.getElementById(id).value.split(',');
+        agregarProd(n, parseInt(p));
+    }
+
+    function agregarProd(n, p) {
+        if (!mesaActual || mesas[mesaActual].cobrada) return;
+        vibrar('suave');
+        mesas[mesaActual].items[n] = mesas[mesaActual].items[n] || { precio: p, qty: 0 };
+        mesas[mesaActual].items[n].qty++;
+        save(); actualizarTicket();
+    }
+
+    function cambiarQty(n, d) {
+        vibrar('suave');
+        if (mesas[mesaActual].cobrada) return;
+        mesas[mesaActual].items[n].qty += d;
+        if (mesas[mesaActual].items[n].qty <= 0) {
+            vibrar('error');
+            delete mesas[mesaActual].items[n];
         }
-        setInterval(renderizarMesas, 30000);
-        window.onload = () => { 
-            const savedTheme = localStorage.getItem('theme') || 'light';
-            document.body.setAttribute('data-theme', savedTheme);
-            renderizarMesas(); 
-        };
-    </script>
+        save(); actualizarTicket();
+    }
+
+    function guardarNota() { if (mesaActual) { mesas[mesaActual].nota = document.getElementById('nota-input').value; save(); } }
+
+    function actualizarTicket() {
+        const m = mesas[mesaActual];
+        const container = document.getElementById('lista-pedidos');
+        container.innerHTML = ""; let total = 0;
+        for (let n in m.items) {
+            const i = m.items[n]; total += i.precio * i.qty;
+            container.innerHTML += `<div class="item-pedido">
+                <div><b>${n}</b><br><small>$${i.precio}</small></div>
+                <div class="controles">
+                    <button class="btn-qty" onclick="cambiarQty('${n}', -1)">-</button>
+                    <b>${i.qty}</b>
+                    <button class="btn-qty" onclick="cambiarQty('${n}', 1)">+</button>
+                    <b style="width:70px; text-align:right">$${i.precio * i.qty}</b>
+                </div>
+            </div>`;
+        }
+        document.getElementById('total-precio').innerText = `$${total}`;
+        const btnContainer = document.getElementById('btn-container');
+        if (m.cobrada) {
+            btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir Mesa</button><button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button><button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
+        } else {
+            btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>`;
+        }
+    }
+
+    function cobrar() {
+        vibrar('exito');
+        const m = mesas[mesaActual]; m.cobrada = true;
+        let totalMesa = 0; for(let n in m.items) totalMesa += m.items[n].precio * m.items[n].qty;
+        const index = historial.findIndex(v => v.mesa === mesaActual);
+        const venta = { mesa: mesaActual, total: totalMesa, fecha: new Date().toLocaleTimeString() };
+        if (index !== -1) historial[index] = venta; else historial.push(venta);
+        save(); actualizarTicket(); renderizarMesas();
+    }
+
+    function verCierreCaja() {
+        vibrar('suave');
+        const modal = document.getElementById('modal-caja');
+        const detalle = document.getElementById('caja-detalle');
+        let totalGral = 0; detalle.innerHTML = "";
+        historial.forEach(v => {
+            totalGral += v.total;
+            detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between"><span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b></div>`;
+        });
+        document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
+        modal.classList.remove('hidden');
+    }
+
+    function reiniciarCaja() { 
+        if(confirm("¿Limpiar historial diario?")) { 
+            vibrar('error');
+            historial = []; save(); location.reload(); 
+        } 
+    }
+    
+    function reabrir() { 
+        vibrar('suave');
+        mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); 
+    }
+    
+    function liberar() { 
+        if(confirm("¿Limpiar mesa?")) { 
+            vibrar('error');
+            delete mesas[mesaActual]; mesaActual = null; save(); location.reload(); 
+        } 
+    }
+
+    function toggleMenu() { 
+        vibrar('suave');
+        document.getElementById('sidebar').classList.toggle('open'); 
+    }
+    
+    function enviarWhatsapp() {
+        vibrar('suave');
+        const m = mesas[mesaActual];
+        let msg = `*Poli Grupo 2 - Mesa: ${mesaActual}*\n`;
+        let total = 0;
+        for (let n in m.items) {
+            const i = m.items[n]; msg += `- ${i.qty}x ${n}: $${i.precio * i.qty}\n`; total += i.precio * i.qty;
+        }
+        if(m.nota) msg += `_Nota: ${m.nota}_\n`;
+        msg += `*TOTAL: $${total}*`;
+        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+    }
+
+    function renderizarMesas() {
+        const lista = document.getElementById('lista-mesas');
+        lista.innerHTML = "";
+        for (let n in mesas) {
+            const m = mesas[n];
+            const min = Math.floor((Date.now() - m.inicio) / 60000);
+            let t = 0; for (let i in m.items) t += m.items[i].precio * m.items[i].qty;
+            lista.innerHTML += `<div class="mesa-item ${m.cobrada ? 'cobrada' : ''}" onclick="seleccionarMesa('${n}'); toggleMenu();">
+                <span class="tiempo-badge">⏱️ ${min}m</span>Mesa: ${n} <br><b>$${t}</b>
+            </div>`;
+        }
+    }
+    setInterval(renderizarMesas, 30000);
+    window.onload = () => { 
+        const savedTheme = localStorage.getItem('theme') || 'light';
+        document.body.setAttribute('data-theme', savedTheme);
+        renderizarMesas(); 
+    };
+</script>
 </body>
 </html>
