@@ -12,291 +12,97 @@
     <link rel="apple-touch-icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png">
     <link rel="icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png">
 
-   <style>
-    :root {
-        --accent: #0081C9; --bg: #F1F6F9; --dark: #212A3E; --danger: #FF6464;
-        --success: #54B435; --warning: #FFB100; --card-bg: #ffffff; --text-color: #212A3E;
-    }
-    [data-theme="dark"] {
-        --bg: #121212; --dark: #000000; --card-bg: #1E1E1E; --text-color: #E0E0E0;
-    }
-    body { 
-        font-family: 'Segoe UI', sans-serif; 
-        background: var(--bg); 
-        margin: 0; 
-        color: var(--text-color); 
-        transition: 0.3s; 
-        padding-top: env(safe-area-inset-top);
-        padding-bottom: env(safe-area-inset-bottom);
-        line-height: 1.6;
-    }
+    <style>
+        :root {
+            --accent: #0081C9; --bg: #F1F6F9; --dark: #212A3E; --danger: #FF6464;
+            --success: #54B435; --warning: #FFB100; --card-bg: #ffffff; --text-color: #212A3E;
+        }
+        [data-theme="dark"] {
+            --bg: #121212; --dark: #000000; --card-bg: #1E1E1E; --text-color: #E0E0E0;
+        }
+        body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: var(--text-color); transition: 0.3s; padding-top: env(safe-area-inset-top); }
 
-    /* Sidebar */
-    .sidebar {
-        position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
-        background: var(--dark); color: white; transition: 0.3s; z-index: 2000;
-        padding: 20px; box-sizing: border-box; overflow-y: auto;
-    }
-    .sidebar.open { left: 0; }
-    .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
-    
-    .menu-fab {
-        position: fixed; bottom: 20px; left: 20px; z-index: 1500;
-        background: var(--accent); color: white; border: none;
-        padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer;
-        box-shadow: 0 4px 15px rgba(0,0,0,0.3);
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 6px;
-    }
+        /* Sidebar */
+        .sidebar {
+            position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
+            background: var(--dark); color: white; transition: 0.3s; z-index: 2000;
+            padding: 20px; box-sizing: border-box; overflow-y: auto;
+        }
+        .sidebar.open { left: 0; }
+        .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
+        .menu-fab {
+            position: fixed; bottom: 20px; left: 20px; z-index: 1500;
+            background: var(--accent); color: white; border: none;
+            padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
 
-    .main-content { 
-        padding: 20px; 
-        max-width: 600px; 
-        margin: 0 auto; 
-        padding-bottom: max(100px, env(safe-area-inset-bottom)); 
-    }
-    .categoria-box { 
-        background: var(--card-bg); 
-        padding: 15px; 
-        border-radius: 15px; 
-        margin-bottom: 15px;
-        box-shadow: 0 2px 5px rgba(0,0,0,0.05); 
-        border: 1px solid rgba(0,0,0,0.1);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .categoria-box:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    h3 { 
-        margin-top: 0; 
-        color: var(--accent); 
-        border-bottom: 2px solid var(--accent); 
-        padding-bottom: 5px;
-        font-weight: 700;
-    }
+        .main-content { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
+        .categoria-box { 
+            background: var(--card-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
+        }
+        h3 { margin-top: 0; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
 
-    /* Filas de Productos */
-    .producto-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
-    .producto-row span { 
-        font-size: 14px; 
-        white-space: nowrap; 
-        min-width: 80px; 
-        font-weight: 600;
-    }
-    select { 
-        padding: 10px; 
-        border-radius: 8px; 
-        border: 1px solid #ddd; 
-        flex: 1; 
-        background: var(--card-bg); 
-        color: var(--text-color); 
-        min-width: 0; 
-    }
-    
-    .add-btn { 
-        background: var(--accent); 
-        color: white; 
-        border: none; 
-        cursor: pointer; 
-        font-weight: bold; 
-        border-radius: 8px; 
-        height: 42px; 
-        width: 48px; 
-        font-size: 20px; 
-        flex-shrink: 0;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-    }
+        /* Filas de Productos */
+        .producto-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .producto-row span { font-size: 14px; white-space: nowrap; min-width: 80px; }
+        select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex: 1; background: var(--card-bg); color: var(--text-color); min-width: 0; }
+        
+        .add-btn { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px; height: 42px; width: 48px; font-size: 20px; flex-shrink: 0; }
 
-    /* Botones Rápidos */
-    .fast-btn-group { 
-        display: flex; 
-        gap: 8px; 
-        flex-wrap: wrap; 
-        margin-top: 10px; 
-    }
-    .fast-btn { 
-        background: var(--accent); 
-        color: white; 
-        border: none; 
-        padding: 10px;
-        border-radius: 10px; 
-        font-weight: bold; 
-        cursor: pointer; 
-        flex: 1;
-        font-size: 13px; 
-        white-space: nowrap; 
-        text-align: center;
-        display: flex;
-        align-items: center;
-        justify-content: center;
-        gap: 4px;
-    }
+        /* Botones Rápidos */
+        .fast-btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
+        .fast-btn { 
+            background: var(--accent); color: white; border: none; padding: 10px;
+            border-radius: 10px; font-weight: bold; cursor: pointer; flex: 1;
+            font-size: 13px; white-space: nowrap; text-align: center;
+        }
 
-    /* TICKET */
-    .ticket { 
-        background: var(--card-bg); 
-        padding: 20px; 
-        border-radius: 20px; 
-        margin-top: 25px; 
-        border: 2px solid var(--accent);
-        transition: transform 0.2s, box-shadow 0.2s;
-    }
-    .ticket:hover {
-        transform: translateY(-2px);
-        box-shadow: 0 4px 10px rgba(0,0,0,0.1);
-    }
-    .item-pedido { 
-        display: flex; 
-        justify-content: space-between; 
-        align-items: center; 
-        padding: 12px 0; 
-        border-bottom: 1px dashed #ccc; 
-    }
-    
-    .controles { 
-        display: flex; 
-        align-items: center; 
-        gap: 12px; 
-        justify-content: flex-end;
-        min-width: 140px;
-    }
+        /* TICKET - Corrección de botones horizontales */
+        .ticket { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-top: 25px; border: 2px solid var(--accent); }
+        .item-pedido { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #ccc; }
+        
+        .controles { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; /* Espacio entre botones y número */
+            justify-content: flex-end;
+            min-width: 140px;
+        }
 
-    .btn-qty { 
-        background: var(--accent); 
-        color: white; 
-        border: none; 
-        cursor: pointer; 
-        font-weight: bold; 
-        border-radius: 50%; 
-        width: 34px; 
-        height: 34px; 
-        font-size: 20px; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center;
-        flex-shrink: 0;
-    }
+        .btn-qty { 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 50%; 
+            width: 34px; 
+            height: 34px; 
+            font-size: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            flex-shrink: 0;
+        }
 
-    .qty-num { 
-        font-weight: bold; 
-        font-size: 16px; 
-        min-width: 20px; 
-        text-align: center; 
-    }
+        .qty-num { font-weight: bold; font-size: 16px; min-width: 20px; text-align: center; }
 
-    .item-info { 
-        flex: 1; 
-        padding-right: 10px; 
-    }
-    .item-info b {
-        font-size: 15px;
-    }
-    .item-info small {
-        opacity: 0.8;
-    }
-    .item-subtotal { 
-        font-weight: bold; 
-        min-width: 70px; 
-        text-align: right; 
-    }
+        .item-info { flex: 1; padding-right: 10px; }
+        .item-subtotal { font-weight: bold; min-width: 70px; text-align: right; }
 
-    .nota-mesa { 
-        width: 100%; 
-        padding: 10px; 
-        margin-top: 10px; 
-        border-radius: 8px; 
-        box-sizing: border-box; 
-        border: 1px solid var(--warning); 
-        background: rgba(255, 177, 0, 0.1); 
-        color: var(--text-color); 
-        font-family: inherit; 
-        resize: none; 
-    }
-    .total-box { 
-        background: var(--dark); 
-        color: white; 
-        padding: 20px; 
-        border-radius: 15px; 
-        display: flex; 
-        justify-content: space-between; 
-        font-size: 22px; 
-        font-weight: bold; 
-        margin-top: 20px; 
-    }
-    .btn-footer { 
-        width: 100%; 
-        padding: 15px; 
-        border: none; 
-        border-radius: 12px; 
-        font-weight: bold; 
-        cursor: pointer; 
-        margin-top: 10px; 
-        color: white; 
-        font-size: 16px; 
-    }
-    .btn-footer[style*="success"] {
-        animation: pulse 2s infinite;
-    }
-
-    .mesa-item { 
-        background: #394867; 
-        color: white; 
-        padding: 12px; 
-        border-radius: 10px; 
-        margin-bottom: 10px; 
-        cursor: pointer; 
-        border-left: 5px solid transparent; 
-        transition: background 0.2s;
-    }
-    .mesa-item.cobrada { 
-        border-left-color: var(--danger); 
-        background: #4b1d1d; 
-        opacity: 0.85;
-        color: #ff9e9e;
-    }
-    .tiempo-badge { 
-        font-size: 0.7rem; 
-        background: rgba(255,255,255,0.2); 
-        padding: 2px 6px; 
-        border-radius: 4px; 
-        float: right; 
-    }
-    .modal { 
-        position: fixed; 
-        top: 0; 
-        left: 0; 
-        width: 100%; 
-        height: 100%; 
-        background: rgba(0,0,0,0.8); 
-        z-index: 3000; 
-        display: flex; 
-        align-items: center; 
-        justify-content: center; 
-    }
-    .modal-content { 
-        background: var(--card-bg); 
-        padding: 25px; 
-        border-radius: 20px; 
-        width: 90%; 
-        max-width: 400px; 
-        color: var(--text-color); 
-    }
-    .hidden { 
-        display: none !important; 
-    }
-
-    @keyframes pulse {
-        0% { box-shadow: 0 0 0 0 rgba(84, 180, 53, 0.4); }
-        70% { box-shadow: 0 0 0 10px rgba(84, 180, 53, 0); }
-        100% { box-shadow: 0 0 0 0 rgba(84, 180, 53, 0); }
-    }
-</style>
+        .nota-mesa { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; box-sizing: border-box; border: 1px solid var(--warning); background: rgba(255, 177, 0, 0.1); color: var(--text-color); font-family: inherit; resize: none; }
+        .total-box { background: var(--dark); color: white; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: 20px; }
+        .btn-footer { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; font-size: 16px; }
+        .mesa-item { background: #394867; color: white; padding: 12px; border-radius: 10px; margin-bottom: 10px; cursor: pointer; border-left: 5px solid transparent; }
+        .mesa-item.cobrada { border-left-color: var(--danger); background: #4b1d1d; }
+        .tiempo-badge { font-size: 0.7rem; background: rgba(255,255,255,0.2); padding: 2px 6px; border-radius: 4px; float: right; }
+        .modal { position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0,0,0,0.8); z-index: 3000; display: flex; align-items: center; justify-content: center; }
+        .modal-content { background: var(--card-bg); padding: 25px; border-radius: 20px; width: 90%; max-width: 400px; color: var(--text-color); }
+        .hidden { display: none !important; }
+    </style>
 </head>
 <body data-theme="light">
 
@@ -604,19 +410,18 @@
             window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
         }
 
-      function renderizarMesas() {
-    const lista = document.getElementById('lista-mesas');
-    lista.innerHTML = "";
-    for (let n in mesas) {
-        const m = mesas[n];
-        const min = Math.floor((Date.now() - m.inicio) / 60000);
-        let t = 0; for (let i in m.items) t += m.items[i].precio * m.items[i].qty;
-        lista.innerHTML += `<div class="mesa-item ${m.cobrada ? 'cobrada' : ''}" onclick="seleccionarMesa('${n}'); toggleMenu();">
-            <span class="tiempo-badge">⏱️ ${min}m</span>Mesa: ${n} ${m.cobrada ? '✅' : ''}
-            <br><b>$${t}</b>
-        </div>`;
-    }
-}
+        function renderizarMesas() {
+            const lista = document.getElementById('lista-mesas');
+            lista.innerHTML = "";
+            for (let n in mesas) {
+                const m = mesas[n];
+                const min = Math.floor((Date.now() - m.inicio) / 60000);
+                let t = 0; for (let i in m.items) t += m.items[i].precio * m.items[i].qty;
+                lista.innerHTML += `<div class="mesa-item ${m.cobrada ? 'cobrada' : ''}" onclick="seleccionarMesa('${n}'); toggleMenu();">
+                    <span class="tiempo-badge">⏱️ ${min}m</span>Mesa: ${n} <br><b>$${t}</b>
+                </div>`;
+            }
+        }
         setInterval(renderizarMesas, 30000);
         window.onload = () => { 
             const savedTheme = localStorage.getItem('theme') || 'light';
