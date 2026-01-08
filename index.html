@@ -22,6 +22,7 @@
         }
         body { font-family: 'Segoe UI', sans-serif; background: var(--bg); margin: 0; color: var(--text-color); transition: 0.3s; padding-top: env(safe-area-inset-top); }
 
+        /* Sidebar */
         .sidebar {
             position: fixed; left: -300px; top: 0; width: 280px; height: 100%;
             background: var(--dark); color: white; transition: 0.3s; z-index: 2000;
@@ -29,31 +30,69 @@
         }
         .sidebar.open { left: 0; }
         .sidebar-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 20px; }
+        
         .menu-fab {
             position: fixed; bottom: 20px; left: 20px; z-index: 1500;
             background: var(--accent); color: white; border: none;
             padding: 15px 25px; border-radius: 50px; font-weight: bold; cursor: pointer;
             box-shadow: 0 4px 15px rgba(0,0,0,0.3);
         }
+
         .main-content { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
         .categoria-box { 
             background: var(--card-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
         }
         h3 { margin-top: 0; color: var(--accent); border-bottom: 2px solid var(--accent); padding-bottom: 5px; }
-        .producto-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; flex-wrap: nowrap; }
-        .producto-row span { font-size: 14px; white-space: nowrap; min-width: fit-content; }
+
+        /* Filas de Productos */
+        .producto-row { display: flex; align-items: center; gap: 8px; margin-bottom: 12px; }
+        .producto-row span { font-size: 14px; white-space: nowrap; min-width: 80px; }
         select { padding: 10px; border-radius: 8px; border: 1px solid #ddd; flex: 1; background: var(--card-bg); color: var(--text-color); min-width: 0; }
-        .add-btn { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px; flex-shrink: 0; height: 42px; width: 48px; font-size: 20px; }
+        
+        .add-btn { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 8px; height: 42px; width: 48px; font-size: 20px; flex-shrink: 0; }
+
+        /* Botones Rápidos */
         .fast-btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
         .fast-btn { 
-            background: var(--accent); color: white; border: none; padding: 10px 12px;
+            background: var(--accent); color: white; border: none; padding: 10px;
             border-radius: 10px; font-weight: bold; cursor: pointer; flex: 1;
-            min-width: fit-content; font-size: 13px; white-space: nowrap;
+            font-size: 13px; white-space: nowrap; text-align: center;
         }
-        .btn-qty { background: var(--accent); color: white; border: none; cursor: pointer; font-weight: bold; border-radius: 50%; width: 35px; height: 35px; font-size: 20px; display: flex; align-items: center; justify-content: center; }
+
+        /* TICKET - Corrección de botones horizontales */
         .ticket { background: var(--card-bg); padding: 20px; border-radius: 20px; margin-top: 25px; border: 2px solid var(--accent); }
-        .item-pedido { display: flex; justify-content: space-between; align-items: center; padding: 10px 0; border-bottom: 1px dashed #ccc; }
+        .item-pedido { display: flex; justify-content: space-between; align-items: center; padding: 12px 0; border-bottom: 1px dashed #ccc; }
+        
+        .controles { 
+            display: flex; 
+            align-items: center; 
+            gap: 12px; /* Espacio entre botones y número */
+            justify-content: flex-end;
+            min-width: 140px;
+        }
+
+        .btn-qty { 
+            background: var(--accent); 
+            color: white; 
+            border: none; 
+            cursor: pointer; 
+            font-weight: bold; 
+            border-radius: 50%; 
+            width: 34px; 
+            height: 34px; 
+            font-size: 20px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .qty-num { font-weight: bold; font-size: 16px; min-width: 20px; text-align: center; }
+
+        .item-info { flex: 1; padding-right: 10px; }
+        .item-subtotal { font-weight: bold; min-width: 70px; text-align: right; }
+
         .nota-mesa { width: 100%; padding: 10px; margin-top: 10px; border-radius: 8px; box-sizing: border-box; border: 1px solid var(--warning); background: rgba(255, 177, 0, 0.1); color: var(--text-color); font-family: inherit; resize: none; }
         .total-box { background: var(--dark); color: white; padding: 20px; border-radius: 15px; display: flex; justify-content: space-between; font-size: 22px; font-weight: bold; margin-top: 20px; }
         .btn-footer { width: 100%; padding: 15px; border: none; border-radius: 12px; font-weight: bold; cursor: pointer; margin-top: 10px; color: white; font-size: 16px; }
@@ -96,8 +135,8 @@
                     <span>🍟 Papas:</span>
                     <select id="papas-select">
                         <option value="Papas Cono,3000">Cono $3000</option>
-                        <option value="Papas Común,5000">Bandeja Común $5000</option>
-                        <option value="Papas Cheddar,6000">Bandeja Cheddar $6000</option>
+                        <option value="Bandeja Común,5000">Bandeja Común $5000</option>
+                        <option value="Bandeja Cheddar,6000">Bandeja Cheddar $6000</option>
                     </select>
                     <button class="add-btn" onclick="agregarDeSelect('papas-select')">+</button>
                 </div>
@@ -113,38 +152,44 @@
                     <button class="add-btn" onclick="agregarDeSelect('pizza-select')">+</button>
                 </div>
                 <div class="producto-row">
-                    <span>🍔 Burger:</span>
-                    <select id="burger-select"><option value="Burger Simple,5000">Simple $5000</option><option value="Burger Completa,8000">Completa $8000</option></select>
-                    <button class="add-btn" onclick="agregarDeSelect('burger-select')">+</button>
-                </div>
-                <div class="producto-row">
-                    <span>🥧 Tartas:</span>
-                    <select id="tarta-select">
-                        <option value="Tarta J&Q,10000">J&Q $10000</option><option value="1/2 Tarta J&Q,6000">Media J&Q $6000</option>
-                        <option value="Tarta Verdura,10000">Verdura $10000</option><option value="1/2 Tarta Verdura,6000">Media Verdura $6000</option>
-                        <option value="Tarta Pollo,11000">Pollo $11000</option><option value="1/2 Tarta Pollo,7000">Media Pollo $7000</option>
-                    </select>
-                    <button class="add-btn" onclick="agregarDeSelect('tarta-select')">+</button>
-                </div>
-                <div class="producto-row">
                     <span>🥪 Sándwich:</span>
                     <select id="sand-select">
-                        <option value="Mila Simple,7000">Mila Simple $7000</option><option value="Mila Completo,9000">Mila Completo $9000</option>
-                        <option value="S. Miga,5000">Miga $5000</option><option value="Carlitos,6000">Carlitos $6000</option><option value="Triples,7000">Triples $7000</option>
+                        <option value="Mila Simple,7000">Mila Simple $7000</option>
+                        <option value="Mila Completo,9000">Mila Completo $9000</option>
+                        <option value="S. Miga,5000">Miga $5000</option>
+                        <option value="Carlitos,6000">Carlitos $6000</option>
+                        <option value="Triples,7000">Triples $7000</option>
                     </select>
                     <button class="add-btn" onclick="agregarDeSelect('sand-select')">+</button>
                 </div>
                 <div class="producto-row">
-                    <span>🥟 Empanadas:</span>
+                    <span>🥧 Tartas:</span>
+                    <select id="tarta-select">
+                        <option value="Tarta J&Q,10000">J&Q Entera $10000</option>
+                        <option value="1/2 Tarta J&Q,6000">J&Q Media $6000</option>
+                        <option value="Tarta Verdura,10000">Verdura Entera $10000</option>
+                        <option value="1/2 Tarta Verdura,6000">Verdura Media $6000</option>
+                        <option value="Tarta Pollo,11000">Pollo Entera $11000</option>
+                        <option value="1/2 Tarta Pollo,7000">Pollo Media $7000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('tarta-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>🥟 Empan.:</span>
                     <select id="empa-select">
-                        <option value="Empa. Carne c/u,1200">Carne c/u $1200</option><option value="Docena Carne,12000">Docena Carne $12k</option>
-                        <option value="Pollo c/u,1200">Pollo c/u $1200</option><option value="Docena Pollo,12000">Docena Pollo $12k</option>
+                        <option value="Empa. Carne c/u,1200">Carne $1200</option>
+                        <option value="Docena Carne,12000">Docena Carne $12k</option>
+                        <option value="Empa. Pollo c/u,1200">Pollo $1200</option>
+                        <option value="Docena Pollo,12000">Docena Pollo $12k</option>
                     </select>
                     <button class="add-btn" onclick="agregarDeSelect('empa-select')">+</button>
                 </div>
                 <div class="producto-row">
                     <span>🌭 Panchos:</span>
-                    <select id="pancho-select"><option value="Pancho,1500">Pancho $1500</option><option value="Combo Pancho+Lata,3000">Combo (+Lata) $3000</option></select>
+                    <select id="pancho-select">
+                        <option value="Pancho,1500">Simple $1500</option>
+                        <option value="Combo Pancho+Lata,3000">Combo (+Lata) $3000</option>
+                    </select>
                     <button class="add-btn" onclick="agregarDeSelect('pancho-select')">+</button>
                 </div>
                 <div class="fast-btn-group">
@@ -157,45 +202,63 @@
             <div class="categoria-box">
                 <h3>🍹 Bebidas</h3>
                 <div class="producto-row">
-                    <span>💧 Agua:</span>
-                    <select id="agua-select"><option value="Agua 500ml,2000">500ml $2000</option><option value="Agua 1.5L,2500">1.5L $2500</option></select>
-                    <button class="add-btn" onclick="agregarDeSelect('agua-select')">+</button>
-                </div>
-                <div class="producto-row">
-                    <span>🥤 Gaseosas:</span>
+                    <span>🥤 Pepsi/7up:</span>
                     <select id="gaseosa-select">
-                        <option value="7up 500ml,2000">7up 500ml $2000</option><option value="7up Lata,2000">7up Lata $2000</option><option value="7up 1.5L,4000">7up 1.5L $4000</option>
-                        <option value="Pepsi 500ml,2000">Pepsi 500ml $2000</option><option value="Pepsi Lata,2000">Pepsi Lata $2000</option><option value="Pepsi 1.5L,4000">Pepsi 1.5L $4000</option>
-                        <option value="Mirinda 1.5L,3500">Mirinda 1.5L $3500</option><option value="H2O Citrus 1.5L,3500">H2O 1.5L $3500</option>
-                        <option value="Paso Toros 1.5L,4000">P. Toros 1.5L $4000</option><option value="Gatorade,5000">Gatorade $5000</option>
+                        <option value="Pepsi 500ml,2000">Pepsi 500ml $2000</option>
+                        <option value="Pepsi Lata,2000">Pepsi Lata $2000</option>
+                        <option value="Pepsi 1.5L,4000">Pepsi 1.5L $4000</option>
+                        <option value="7up 500ml,2000">7up 500ml $2000</option>
+                        <option value="7up Lata,2000">7up Lata $2000</option>
+                        <option value="7up 1.5L,4000">7up 1.5L $4000</option>
+                        <option value="Mirinda 1.5L,3500">Mirinda 1.5L $3500</option>
+                        <option value="H2O 1.5L,3500">H2O Citrus $3500</option>
+                        <option value="Paso Toros 1.5L,4000">P. Toros 1.5L $4000</option>
                     </select>
                     <button class="add-btn" onclick="agregarDeSelect('gaseosa-select')">+</button>
                 </div>
                 <div class="producto-row">
                     <span>🍺 Cervezas:</span>
                     <select id="birra-select">
-                        <option value="Quilmes 1L,4500">Quilmes 1L $4500</option><option value="Quilmes Negra 1L,4500">Quilmes Negra $4500</option>
-                        <option value="Budweiser 1L,5000">Budweiser 1L $5000</option><option value="Lata Bud,2000">Lata Bud $2000</option>
-                        <option value="Brahma 1L,4500">Brahma 1L $4500</option><option value="Stella 1L,4500">Stella 1L $4500</option>
+                        <option value="Quilmes 1L,4500">Quilmes 1L $4500</option>
+                        <option value="Quilmes Negra 1L,4500">Quilmes Negra $4500</option>
+                        <option value="Budweiser 1L,5000">Budweiser 1L $5000</option>
+                        <option value="Lata Budweiser,2000">Lata Bud $2000</option>
+                        <option value="Brahma 1L,4500">Brahma 1L $4500</option>
+                        <option value="Stella 1L,4500">Stella 1L $4500</option>
                         <option value="Corona 330ml,3500">Corona 330ml $3500</option>
                     </select>
                     <button class="add-btn" onclick="agregarDeSelect('birra-select')">+</button>
                 </div>
                 <div class="producto-row">
-                    <span>🍷 Otros:</span>
+                    <span>💧 Agua/Gator.:</span>
+                    <select id="agua-select">
+                        <option value="Agua 500ml,2000">Agua 500ml $2000</option>
+                        <option value="Agua 1.5L,2500">Agua 1.5L $2500</option>
+                        <option value="Gatorade,5000">Gatorade $5000</option>
+                    </select>
+                    <button class="add-btn" onclick="agregarDeSelect('agua-select')">+</button>
+                </div>
+                <div class="producto-row">
+                    <span>🍷 Vinos/Jarra:</span>
                     <select id="vino-select">
-                        <option value="Nanpe Tinto,4000">Nanpe Tinto $4000</option><option value="Alma Mora,8000">Alma Mora $8000</option><option value="Chacabuco B,8000">Chacabuco Blanco $8000</option>
-                        <option value="Jarra Fernet,8000">Jarra Fernet $8000</option><option value="Jarra Gancia,6000">Jarra Gancia $6000</option>
+                        <option value="Nanpe Tinto,4000">Nanpe Tinto $4000</option>
+                        <option value="Alma Mora,8000">Alma Mora $8000</option>
+                        <option value="Chacabuco Blanco,8000">Chacabuco B. $8000</option>
+                        <option value="Jarra Fernet,8000">Jarra Fernet $8000</option>
+                        <option value="Jarra Gancia,6000">Jarra Gancia $6000</option>
                     </select>
                     <button class="add-btn" onclick="agregarDeSelect('vino-select')">+</button>
                 </div>
             </div>
 
             <div class="categoria-box">
-                <h3>🍧 Postres</h3>
+                <h3>🍓 Postres</h3>
                 <div class="producto-row">
-                    <span>🍓 Ensalada Fruta:</span>
-                    <select id="fruit-select"><option value="Ens. Fruta 250ml,2000">250ml $2000</option><option value="Ens. Fruta 500ml,4000">500ml $4000</option></select>
+                    <span>🍧 Ens. Fruta:</span>
+                    <select id="fruit-select">
+                        <option value="Ens. Fruta 250ml,2000">250ml $2000</option>
+                        <option value="Ens. Fruta 500ml,4000">500ml $4000</option>
+                    </select>
                     <button class="add-btn" onclick="agregarDeSelect('fruit-select')">+</button>
                 </div>
             </div>
@@ -220,195 +283,151 @@
         </div>
     </div>
 
-   <script>
-    // Registro de PWA
-    if ('serviceWorker' in navigator) {
-        window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
-    }
-
-    let mesas = JSON.parse(localStorage.getItem('poli_vFinal')) || {};
-    let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
-    let mesaActual = null;
-
-    function vibrar(tipo) {
-    if (!navigator.vibrate) {
-        console.log("El navegador no soporta vibración");
-        return;
-    }
-    
-    try {
-        if (tipo === 'suave') {
-            navigator.vibrate(60); // Un toque un poco más fuerte (60ms)
-        } else if (tipo === 'exito') {
-            navigator.vibrate([70, 50, 70]); // Vibración doble clara
-        } else if (tipo === 'error') {
-            navigator.vibrate(250); // Vibración larga
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.js'); });
         }
-    } catch (e) {
-        console.log("Error al intentar vibrar", e);
-    }
-}
-    function save() { 
-        localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
-        localStorage.setItem('poli_historial', JSON.stringify(historial));
-    }
 
-    function toggleTheme() {
-        vibrar('suave');
-        const isDark = document.body.getAttribute('data-theme') === 'dark';
-        document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
-        document.getElementById('theme-toggle').innerText = isDark ? '🌙' : '☀️';
-        localStorage.setItem('theme', isDark ? 'light' : 'dark');
-    }
+        let mesas = JSON.parse(localStorage.getItem('poli_vFinal')) || {};
+        let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
+        let mesaActual = null;
 
-    function crearMesa() {
-        const n = prompt("Nombre/Nro Mesa:");
-        if (!n || mesas[n]) return;
-        vibrar('exito');
-        mesas[n] = { items: {}, cobrada: false, nota: "", inicio: Date.now() };
-        save(); renderizarMesas(); seleccionarMesa(n); toggleMenu();
-    }
-
-    function seleccionarMesa(n) {
-        vibrar('suave');
-        mesaActual = n;
-        document.getElementById('pantalla-vacia').classList.add('hidden');
-        document.getElementById('area-operativa').classList.remove('hidden');
-        document.getElementById('titulo-mesa').innerText = `📍 Mesa: ${n}`;
-        document.getElementById('nombre-mesa-ticket').innerText = n;
-        document.getElementById('nota-input').value = mesas[n].nota || "";
-        actualizarTicket(); renderizarMesas();
-    }
-
-    function agregarDeSelect(id) {
-        const [n, p] = document.getElementById(id).value.split(',');
-        agregarProd(n, parseInt(p));
-    }
-
-    function agregarProd(n, p) {
-        if (!mesaActual || mesas[mesaActual].cobrada) return;
-        vibrar('suave');
-        mesas[mesaActual].items[n] = mesas[mesaActual].items[n] || { precio: p, qty: 0 };
-        mesas[mesaActual].items[n].qty++;
-        save(); actualizarTicket();
-    }
-
-    function cambiarQty(n, d) {
-        vibrar('suave');
-        if (mesas[mesaActual].cobrada) return;
-        mesas[mesaActual].items[n].qty += d;
-        if (mesas[mesaActual].items[n].qty <= 0) {
-            vibrar('error');
-            delete mesas[mesaActual].items[n];
+        function save() { 
+            localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
+            localStorage.setItem('poli_historial', JSON.stringify(historial));
         }
-        save(); actualizarTicket();
-    }
 
-    function guardarNota() { if (mesaActual) { mesas[mesaActual].nota = document.getElementById('nota-input').value; save(); } }
-
-    function actualizarTicket() {
-        const m = mesas[mesaActual];
-        const container = document.getElementById('lista-pedidos');
-        container.innerHTML = ""; let total = 0;
-        for (let n in m.items) {
-            const i = m.items[n]; total += i.precio * i.qty;
-            container.innerHTML += `<div class="item-pedido">
-                <div><b>${n}</b><br><small>$${i.precio}</small></div>
-                <div class="controles">
-                    <button class="btn-qty" onclick="cambiarQty('${n}', -1)">-</button>
-                    <b>${i.qty}</b>
-                    <button class="btn-qty" onclick="cambiarQty('${n}', 1)">+</button>
-                    <b style="width:70px; text-align:right">$${i.precio * i.qty}</b>
-                </div>
-            </div>`;
+        function toggleTheme() {
+            const isDark = document.body.getAttribute('data-theme') === 'dark';
+            document.body.setAttribute('data-theme', isDark ? 'light' : 'dark');
+            document.getElementById('theme-toggle').innerText = isDark ? '🌙' : '☀️';
+            localStorage.setItem('theme', isDark ? 'light' : 'dark');
         }
-        document.getElementById('total-precio').innerText = `$${total}`;
-        const btnContainer = document.getElementById('btn-container');
-        if (m.cobrada) {
-            btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir Mesa</button><button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button><button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
-        } else {
-            btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>`;
+
+        function crearMesa() {
+            const n = prompt("Nombre/Nro Mesa:");
+            if (!n || mesas[n]) return;
+            mesas[n] = { items: {}, cobrada: false, nota: "", inicio: Date.now() };
+            save(); renderizarMesas(); seleccionarMesa(n); toggleMenu();
         }
-    }
 
-    function cobrar() {
-        vibrar('exito');
-        const m = mesas[mesaActual]; m.cobrada = true;
-        let totalMesa = 0; for(let n in m.items) totalMesa += m.items[n].precio * m.items[n].qty;
-        const index = historial.findIndex(v => v.mesa === mesaActual);
-        const venta = { mesa: mesaActual, total: totalMesa, fecha: new Date().toLocaleTimeString() };
-        if (index !== -1) historial[index] = venta; else historial.push(venta);
-        save(); actualizarTicket(); renderizarMesas();
-    }
-
-    function verCierreCaja() {
-        vibrar('suave');
-        const modal = document.getElementById('modal-caja');
-        const detalle = document.getElementById('caja-detalle');
-        let totalGral = 0; detalle.innerHTML = "";
-        historial.forEach(v => {
-            totalGral += v.total;
-            detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between"><span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b></div>`;
-        });
-        document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
-        modal.classList.remove('hidden');
-    }
-
-    function reiniciarCaja() { 
-        if(confirm("¿Limpiar historial diario?")) { 
-            vibrar('error');
-            historial = []; save(); location.reload(); 
-        } 
-    }
-    
-    function reabrir() { 
-        vibrar('suave');
-        mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); 
-    }
-    
-    function liberar() { 
-        if(confirm("¿Limpiar mesa?")) { 
-            vibrar('error');
-            delete mesas[mesaActual]; mesaActual = null; save(); location.reload(); 
-        } 
-    }
-
-    function toggleMenu() { 
-        vibrar('suave');
-        document.getElementById('sidebar').classList.toggle('open'); 
-    }
-    
-    function enviarWhatsapp() {
-        vibrar('suave');
-        const m = mesas[mesaActual];
-        let msg = `*Poli Grupo 2 - Mesa: ${mesaActual}*\n`;
-        let total = 0;
-        for (let n in m.items) {
-            const i = m.items[n]; msg += `- ${i.qty}x ${n}: $${i.precio * i.qty}\n`; total += i.precio * i.qty;
+        function seleccionarMesa(n) {
+            mesaActual = n;
+            document.getElementById('pantalla-vacia').classList.add('hidden');
+            document.getElementById('area-operativa').classList.remove('hidden');
+            document.getElementById('titulo-mesa').innerText = `📍 Mesa: ${n}`;
+            document.getElementById('nombre-mesa-ticket').innerText = n;
+            document.getElementById('nota-input').value = mesas[n].nota || "";
+            actualizarTicket(); renderizarMesas();
         }
-        if(m.nota) msg += `_Nota: ${m.nota}_\n`;
-        msg += `*TOTAL: $${total}*`;
-        window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
-    }
 
-    function renderizarMesas() {
-        const lista = document.getElementById('lista-mesas');
-        lista.innerHTML = "";
-        for (let n in mesas) {
-            const m = mesas[n];
-            const min = Math.floor((Date.now() - m.inicio) / 60000);
-            let t = 0; for (let i in m.items) t += m.items[i].precio * m.items[i].qty;
-            lista.innerHTML += `<div class="mesa-item ${m.cobrada ? 'cobrada' : ''}" onclick="seleccionarMesa('${n}'); toggleMenu();">
-                <span class="tiempo-badge">⏱️ ${min}m</span>Mesa: ${n} <br><b>$${t}</b>
-            </div>`;
+        function agregarDeSelect(id) {
+            const [n, p] = document.getElementById(id).value.split(',');
+            agregarProd(n, parseInt(p));
         }
-    }
-    setInterval(renderizarMesas, 30000);
-    window.onload = () => { 
-        const savedTheme = localStorage.getItem('theme') || 'light';
-        document.body.setAttribute('data-theme', savedTheme);
-        renderizarMesas(); 
-    };
-</script>
+
+        function agregarProd(n, p) {
+            if (!mesaActual || mesas[mesaActual].cobrada) return;
+            mesas[mesaActual].items[n] = mesas[mesaActual].items[n] || { precio: p, qty: 0 };
+            mesas[mesaActual].items[n].qty++;
+            save(); actualizarTicket();
+        }
+
+        function cambiarQty(n, d) {
+            if (mesas[mesaActual].cobrada) return;
+            mesas[mesaActual].items[n].qty += d;
+            if (mesas[mesaActual].items[n].qty <= 0) delete mesas[mesaActual].items[n];
+            save(); actualizarTicket();
+        }
+
+        function guardarNota() { if (mesaActual) { mesas[mesaActual].nota = document.getElementById('nota-input').value; save(); } }
+
+        function actualizarTicket() {
+            const m = mesas[mesaActual];
+            const container = document.getElementById('lista-pedidos');
+            container.innerHTML = ""; let total = 0;
+            for (let n in m.items) {
+                const i = m.items[n]; 
+                const subtotal = i.precio * i.qty;
+                total += subtotal;
+                container.innerHTML += `
+                <div class="item-pedido">
+                    <div class="item-info">
+                        <b>${n}</b><br><small>$${i.precio}</small>
+                    </div>
+                    <div class="controles">
+                        <button class="btn-qty" onclick="cambiarQty('${n}', -1)">-</button>
+                        <span class="qty-num">${i.qty}</span>
+                        <button class="btn-qty" onclick="cambiarQty('${n}', 1)">+</button>
+                    </div>
+                    <div class="item-subtotal">$${subtotal}</div>
+                </div>`;
+            }
+            document.getElementById('total-precio').innerText = `$${total}`;
+            const btnContainer = document.getElementById('btn-container');
+            if (m.cobrada) {
+                btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir</button><button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button><button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
+            } else {
+                btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>`;
+            }
+        }
+
+        function cobrar() {
+            const m = mesas[mesaActual]; m.cobrada = true;
+            let totalMesa = 0; for(let n in m.items) totalMesa += m.items[n].precio * m.items[n].qty;
+            const index = historial.findIndex(v => v.mesa === mesaActual);
+            const venta = { mesa: mesaActual, total: totalMesa, fecha: new Date().toLocaleTimeString() };
+            if (index !== -1) historial[index] = venta; else historial.push(venta);
+            save(); actualizarTicket(); renderizarMesas();
+        }
+
+        function verCierreCaja() {
+            const modal = document.getElementById('modal-caja');
+            const detalle = document.getElementById('caja-detalle');
+            let totalGral = 0; detalle.innerHTML = "";
+            historial.forEach(v => {
+                totalGral += v.total;
+                detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between"><span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b></div>`;
+            });
+            document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
+            modal.classList.remove('hidden');
+        }
+
+        function reiniciarCaja() { if(confirm("¿Limpiar historial?")) { historial = []; save(); location.reload(); } }
+        function reabrir() { mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); }
+        function liberar() { if(confirm("¿Limpiar mesa?")) { delete mesas[mesaActual]; mesaActual = null; save(); location.reload(); } }
+        function toggleMenu() { document.getElementById('sidebar').classList.toggle('open'); }
+        
+        function enviarWhatsapp() {
+            const m = mesas[mesaActual];
+            let msg = `*Poli Grupo 2 - Mesa: ${mesaActual}*\n`;
+            let total = 0;
+            for (let n in m.items) {
+                const i = m.items[n]; msg += `- ${i.qty}x ${n}: $${i.precio * i.qty}\n`; total += i.precio * i.qty;
+            }
+            if(m.nota) msg += `_Nota: ${m.nota}_\n`;
+            msg += `*TOTAL: $${total}*`;
+            window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
+        }
+
+        function renderizarMesas() {
+            const lista = document.getElementById('lista-mesas');
+            lista.innerHTML = "";
+            for (let n in mesas) {
+                const m = mesas[n];
+                const min = Math.floor((Date.now() - m.inicio) / 60000);
+                let t = 0; for (let i in m.items) t += m.items[i].precio * m.items[i].qty;
+                lista.innerHTML += `<div class="mesa-item ${m.cobrada ? 'cobrada' : ''}" onclick="seleccionarMesa('${n}'); toggleMenu();">
+                    <span class="tiempo-badge">⏱️ ${min}m</span>Mesa: ${n} <br><b>$${t}</b>
+                </div>`;
+            }
+        }
+        setInterval(renderizarMesas, 30000);
+        window.onload = () => { 
+            const savedTheme = localStorage.getItem('theme') || 'light';
+            document.body.setAttribute('data-theme', savedTheme);
+            renderizarMesas(); 
+        };
+    </script>
 </body>
 </html>
