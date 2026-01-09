@@ -102,7 +102,7 @@
             align-items: center;
             margin-bottom: 20px;
             flex-wrap: nowrap;
-            min-height: 40px;
+            min-height: 50px;
         }
 
         .sidebar-header button {
@@ -118,6 +118,27 @@
             justify-content: center;
             color: var(--accent);
         }
+
+        .sidebar-header h2 {
+    font-size: 28px; /* o el tamaño que prefieras */
+    margin: 0;
+}
+
+/* Agrandar el botón de cerrar */
+#close-menu {
+    font-size: 30px !important;
+    width: auto;
+    min-width: 44px; /* área táctil cómoda */
+    height: auto;
+    min-height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+      
+
+     
 
         .menu-fab {
             position: fixed;
@@ -276,10 +297,10 @@
     <aside class="sidebar" id="sidebar">
         <div class="sidebar-header">
             <h2 style="margin:0;">
-                <img src="https://i.postimg.cc/76L71FK9/round-pushpin-1f4cd-(1).png" alt="📍" style="width:24px; vertical-align:-1.5px;"> Poli 2
+                <img src="https://i.postimg.cc/76L71FK9/round-pushpin-1f4cd-(1).png" alt="📍" style="width:28px; vertical-align:-2px;"> Poli 2
             </h2>
             <button id="theme-toggle" onclick="toggleTheme()"></button>
-            <button onclick="toggleMenu()">✕</button>
+            <button id="close-menu" onclick="toggleMenu()">✕</button>
         </div>
         <button class="btn-footer" style="background:var(--accent); margin-bottom:20px;" onclick="crearMesa()">+ Nueva Mesa</button>
         <div id="lista-mesas"></div>
@@ -380,10 +401,10 @@
                         <img src="https://i.postimg.cc/zGNHmthb/doughnut-1f369.png" alt="🍩" style="width:16px; vertical-align:-3px;"> Dona $700
                     </button>
                     <button class="fast-btn" onclick="agregarProd('Torta Frita', 500)">
-                        <img src="https://i.postimg.cc/3wmKKYHT/torta-firta.png" alt="🥯" style="width:16px; vertical-align:-3px;"> T. Frita $500
+                        <img src="https://i.postimg.cc/3wmKKYHT/torta-firta.png" alt="🥯" style="width:20px; vertical-align:-5.5px;"> T. Frita $500
                     </button>
                     <button class="fast-btn" onclick="agregarProd('Picada', 20000)">
-                        <img src="https://i.postimg.cc/d0rqqwKM/picada.png" alt="🧀" style="width:16px; vertical-align:-3px;"> Picada $20k
+                        <img src="https://i.postimg.cc/d0rqqwKM/picada.png" alt="🧀" style="width:23px; vertical-align:-7px;"> Picada $20k
                     </button>
                 </div>
             </div>
@@ -454,7 +475,7 @@
                 </h3>
                 <div class="producto-row">
                     <span>
-                        <img src="https://i.postimg.cc/mrCbbBG4/ensalada-de-fruta.png" alt="🍧" style="width:18px; vertical-align:-3px;"> Ens. Fruta:
+                        <img src="https://i.postimg.cc/mrCbbBG4/ensalada-de-fruta.png" alt="🍧" style="width:24px; vertical-align:-5px;"> Ens. Fruta:
                     </span>
                     <select id="fruit-select">
                         <option value="Ens. Fruta 250ml,2000">250ml $2000</option>
