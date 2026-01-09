@@ -468,34 +468,48 @@
         let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
         let mesaActual = null;
 
-        // === SWIPE GESTURE MEJORADO ===
-        let touchStartX = 0;
-        let touchStartY = 0;
+       let touchStartX = 0;
+let touchStartY = 0;
 
-        document.querySelector('.main-content').addEventListener('touchstart', (e) => {
-            touchStartX = e.changedTouches[0].clientX;
-            touchStartY = e.changedTouches[0].clientY;
-        });
+function initSwipe() {
+    const mainContent = document.querySelector('.main-content');
+    if (!mainContent) return;
 
-        document.querySelector('.main-content').addEventListener('touchend', (e) => {
-            const touchEndX = e.changedTouches[0].clientX;
-            const touchEndY = e.changedTouches[0].clientY;
-            
-            const diffX = touchEndX - touchStartX;
-            const diffY = touchEndY - touchStartY;
-            
-            if (Math.abs(diffY) > Math.abs(diffX)) return;
-            
-            const sidebar = document.getElementById('sidebar');
-            const isOpen = sidebar.classList.contains('open');
-            
-            if (!isOpen && diffX > 50 && touchStartX < 50) {
-                toggleMenu();
-            }
-            else if (isOpen && diffX < -50) {
-                toggleMenu();
-            }
-        });
+    mainContent.addEventListener('touchstart', (e) => {
+        // Solo un dedo
+        if (e.touches.length !== 1) return;
+        touchStartX = e.touches[0].clientX;
+        touchStartY = e.touches[0].clientY;
+    }, { passive: true });
+
+    mainContent.addEventListener('touchend', (e) => {
+        if (e.changedTouches.length !== 1) return;
+        
+        const touchEndX = e.changedTouches[0].clientX;
+        const touchEndY = e.changedTouches[0].clientY;
+        
+        const diffX = touchEndX - touchStartX;
+        const diffY = touchEndY - touchStartY;
+        
+        // Ignorar si es más vertical que horizontal
+        if (Math.abs(diffY) > Math.abs(diffX)) return;
+        
+        const sidebar = document.getElementById('sidebar');
+        const isOpen = sidebar.classList.contains('open');
+        
+        // Abrir: swipe derecho desde el borde izquierdo (<= 60px)
+        if (!isOpen && diffX > 60 && touchStartX <= 60) {
+            toggleMenu();
+        }
+        // Cerrar: swipe izquierdo con menú abierto
+        else if (isOpen && diffX < -60) {
+            toggleMenu();
+        }
+    }, { passive: true });
+}
+
+// Iniciar después de que el DOM esté listo
+document.addEventListener('DOMContentLoaded', initSwipe);
 
         function save() { 
             localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
