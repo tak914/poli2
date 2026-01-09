@@ -34,14 +34,7 @@
             color: var(--text-color); 
             transition: background-color 0.4s, color 0.4s; 
             padding-top: env(safe-area-inset-top); 
-        }
-
-        .main-content {
-            min-height: 100vh; /* asegura área táctil completa */
-            padding: 20px;
-            max-width: 600px;
-            margin: 0 auto;
-            padding-bottom: 100px;
+            touch-action: pan-y;
         }
 
         #menu-overlay {
@@ -72,7 +65,7 @@
                 rgba(241, 246, 249, 0.4) 0%,
                 rgba(241, 246, 249, 0.25) 100%
             );
-            backdrop-filter: blur(3px); /* ✅ reducido para low-end */
+            backdrop-filter: blur(3px);
             -webkit-backdrop-filter: blur(3px);
             transform: translateZ(0);
             color: #222;
@@ -117,6 +110,7 @@
         .menu-fab:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
         .menu-fab:active { transform: scale(0.95); }
 
+        .main-content { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
         .categoria-box { 
             background: var(--card-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
@@ -473,57 +467,31 @@
         let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
         let mesaActual = null;
 
-        // === SWIPE CORREGIDO PARA ANDROID/IOS ===
+        // === SWIPE SIMPLE Y FUNCIONAL ===
         let touchStartX = 0;
-        let touchStartY = 0;
+        let touchEndX = 0;
 
-        function initSwipe() {
-            const mainContent = document.querySelector('.main-content');
-            if (!mainContent) return;
+        document.body.addEventListener('touchstart', (e) => {
+            touchStartX = e.changedTouches[0].clientX;
+        });
 
-            mainContent.addEventListener('touchstart', (e) => {
-                if (e.touches.length === 1) {
-                    touchStartX = e.touches[0].clientX;
-                    touchStartY = e.touches[0].clientY;
-                }
-            }, { passive: true });
+        document.body.addEventListener('touchend', (e) => {
+            touchEndX = e.changedTouches[0].clientX;
+            const diff = touchEndX - touchStartX;
+            const sidebar = document.getElementById('sidebar');
+            const isOpen = sidebar.classList.contains('open');
 
-            mainContent.addEventListener('touchmove', (e) => {
-                if (e.touches.length !== 1) return;
-                const diffX = e.touches[0].clientX - touchStartX;
-                const diffY = e.touches[0].clientY - touchStartY;
-                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-                    e.preventDefault();
-                }
-            }, { passive: false });
+            // Abrir: swipe derecho desde el borde izquierdo (x < 50)
+            if (!isOpen && diff > 50 && touchStartX < 50) {
+                toggleMenu();
+            }
+            // Cerrar: swipe izquierdo con menú abierto
+            else if (isOpen && diff < -50) {
+                toggleMenu();
+            }
+        });
 
-            mainContent.addEventListener('touchend', (e) => {
-                if (e.changedTouches.length !== 1) return;
-                const touchEndX = e.changedTouches[0].clientX;
-                const touchEndY = e.changedTouches[0].clientY;
-                const diffX = touchEndX - touchStartX;
-                const diffY = touchEndY - touchStartY;
-                if (Math.abs(diffY) > Math.abs(diffX)) return;
-                
-                const sidebar = document.getElementById('sidebar');
-                const isOpen = sidebar.classList.contains('open');
-                
-                if (!isOpen && diffX > 60 && touchStartX <= 60) {
-                    toggleMenu();
-                } else if (isOpen && diffX < -60) {
-                    toggleMenu();
-                }
-            }, { passive: true });
-        }
-
-        // Iniciar swipe
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', initSwipe);
-        } else {
-            initSwipe();
-        }
-
-        // === RESTO DE FUNCIONES (sin cambios) ===
+        // === RESTO DEL CÓDIGO SIN CAMBIOS ===
         function save() { 
             localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
             localStorage.setItem('poli_historial', JSON.stringify(historial));
