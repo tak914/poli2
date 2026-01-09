@@ -468,20 +468,35 @@
         let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
         let mesaActual = null;
 
-       let touchStartX = 0;
+  let touchStartX = 0;
 let touchStartY = 0;
 
 function initSwipe() {
     const mainContent = document.querySelector('.main-content');
     if (!mainContent) return;
 
+    // Touch start
     mainContent.addEventListener('touchstart', (e) => {
-        // Solo un dedo
-        if (e.touches.length !== 1) return;
-        touchStartX = e.touches[0].clientX;
-        touchStartY = e.touches[0].clientY;
+        if (e.touches.length === 1) {
+            touchStartX = e.touches[0].clientX;
+            touchStartY = e.touches[0].clientY;
+        }
     }, { passive: true });
 
+    // Touch move: prevenir scroll/zoom durante el swipe
+    main // Touch move: prevenir scroll/zoom durante el swipe
+    mainContent.addEventListener('touchmove', (e) => {
+        if (e.touches.length !== 1) return;
+        const diffX = e.touches[0].clientX - touchStartX;
+        const diffY = e.touches[0].clientY - touchStartY;
+        
+        // Solo prevenir si es un swipe horizontal claro
+        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+            e.preventDefault(); // ¡clave para evitar que el navegador interfiera!
+        }
+    }, { passive: false }); // passive: false es obligatorio para usar preventDefault
+
+    // Touch end
     mainContent.addEventListener('touchend', (e) => {
         if (e.changedTouches.length !== 1) return;
         
@@ -491,26 +506,28 @@ function initSwipe() {
         const diffX = touchEndX - touchStartX;
         const diffY = touchEndY - touchStartY;
         
-        // Ignorar si es más vertical que horizontal
-        if (Math.abs(diffY) > Math.abs(diffX)) return;
+        if (Math.abs(diffY) > Math.abs(diffX)) return; // ignorar scroll vertical
         
         const sidebar = document.getElementById('sidebar');
         const isOpen = sidebar.classList.contains('open');
         
-        // Abrir: swipe derecho desde el borde izquierdo (<= 60px)
+        // Abrir desde borde izquierdo
         if (!isOpen && diffX > 60 && touchStartX <= 60) {
             toggleMenu();
         }
-        // Cerrar: swipe izquierdo con menú abierto
+        // Cerrar con swipe izquierdo
         else if (isOpen && diffX < -60) {
             toggleMenu();
         }
     }, { passive: true });
 }
 
-// Iniciar después de que el DOM esté listo
-document.addEventListener('DOMContentLoaded', initSwipe);
-
+// Iniciar cuando el DOM esté listo
+if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initSwipe);
+} else {
+    initSwipe();
+}
         function save() { 
             localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
             localStorage.setItem('poli_historial', JSON.stringify(historial));
