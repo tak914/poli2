@@ -34,7 +34,14 @@
             color: var(--text-color); 
             transition: background-color 0.4s, color 0.4s; 
             padding-top: env(safe-area-inset-top); 
-            touch-action: pan-y;
+        }
+
+        .main-content {
+            min-height: 100vh; /* asegura área táctil completa */
+            padding: 20px;
+            max-width: 600px;
+            margin: 0 auto;
+            padding-bottom: 100px;
         }
 
         #menu-overlay {
@@ -65,8 +72,8 @@
                 rgba(241, 246, 249, 0.4) 0%,
                 rgba(241, 246, 249, 0.25) 100%
             );
-            backdrop-filter: blur(5px);
-            -webkit-backdrop-filter: blur(5px);
+            backdrop-filter: blur(3px); /* ✅ reducido para low-end */
+            -webkit-backdrop-filter: blur(3px);
             transform: translateZ(0);
             color: #222;
             transition: left 0.3s ease;
@@ -110,7 +117,6 @@
         .menu-fab:hover { transform: scale(1.05); box-shadow: 0 6px 20px rgba(0,0,0,0.4); }
         .menu-fab:active { transform: scale(0.95); }
 
-        .main-content { padding: 20px; max-width: 600px; margin: 0 auto; padding-bottom: 100px; }
         .categoria-box { 
             background: var(--card-bg); padding: 15px; border-radius: 15px; margin-bottom: 15px;
             box-shadow: 0 2px 5px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.1);
@@ -269,7 +275,6 @@
             </h2>
         </div>
 
-        <!-- ✅ ÁREA OPERATIVA COMPLETA -->
         <div id="area-operativa" class="hidden">
             <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
 
@@ -468,66 +473,57 @@
         let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
         let mesaActual = null;
 
-  let touchStartX = 0;
-let touchStartY = 0;
+        // === SWIPE CORREGIDO PARA ANDROID/IOS ===
+        let touchStartX = 0;
+        let touchStartY = 0;
 
-function initSwipe() {
-    const mainContent = document.querySelector('.main-content');
-    if (!mainContent) return;
+        function initSwipe() {
+            const mainContent = document.querySelector('.main-content');
+            if (!mainContent) return;
 
-    // Touch start
-    mainContent.addEventListener('touchstart', (e) => {
-        if (e.touches.length === 1) {
-            touchStartX = e.touches[0].clientX;
-            touchStartY = e.touches[0].clientY;
+            mainContent.addEventListener('touchstart', (e) => {
+                if (e.touches.length === 1) {
+                    touchStartX = e.touches[0].clientX;
+                    touchStartY = e.touches[0].clientY;
+                }
+            }, { passive: true });
+
+            mainContent.addEventListener('touchmove', (e) => {
+                if (e.touches.length !== 1) return;
+                const diffX = e.touches[0].clientX - touchStartX;
+                const diffY = e.touches[0].clientY - touchStartY;
+                if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
+                    e.preventDefault();
+                }
+            }, { passive: false });
+
+            mainContent.addEventListener('touchend', (e) => {
+                if (e.changedTouches.length !== 1) return;
+                const touchEndX = e.changedTouches[0].clientX;
+                const touchEndY = e.changedTouches[0].clientY;
+                const diffX = touchEndX - touchStartX;
+                const diffY = touchEndY - touchStartY;
+                if (Math.abs(diffY) > Math.abs(diffX)) return;
+                
+                const sidebar = document.getElementById('sidebar');
+                const isOpen = sidebar.classList.contains('open');
+                
+                if (!isOpen && diffX > 60 && touchStartX <= 60) {
+                    toggleMenu();
+                } else if (isOpen && diffX < -60) {
+                    toggleMenu();
+                }
+            }, { passive: true });
         }
-    }, { passive: true });
 
-    // Touch move: prevenir scroll/zoom durante el swipe
-    main // Touch move: prevenir scroll/zoom durante el swipe
-    mainContent.addEventListener('touchmove', (e) => {
-        if (e.touches.length !== 1) return;
-        const diffX = e.touches[0].clientX - touchStartX;
-        const diffY = e.touches[0].clientY - touchStartY;
-        
-        // Solo prevenir si es un swipe horizontal claro
-        if (Math.abs(diffX) > Math.abs(diffY) && Math.abs(diffX) > 10) {
-            e.preventDefault(); // ¡clave para evitar que el navegador interfiera!
+        // Iniciar swipe
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', initSwipe);
+        } else {
+            initSwipe();
         }
-    }, { passive: false }); // passive: false es obligatorio para usar preventDefault
 
-    // Touch end
-    mainContent.addEventListener('touchend', (e) => {
-        if (e.changedTouches.length !== 1) return;
-        
-        const touchEndX = e.changedTouches[0].clientX;
-        const touchEndY = e.changedTouches[0].clientY;
-        
-        const diffX = touchEndX - touchStartX;
-        const diffY = touchEndY - touchStartY;
-        
-        if (Math.abs(diffY) > Math.abs(diffX)) return; // ignorar scroll vertical
-        
-        const sidebar = document.getElementById('sidebar');
-        const isOpen = sidebar.classList.contains('open');
-        
-        // Abrir desde borde izquierdo
-        if (!isOpen && diffX > 60 && touchStartX <= 60) {
-            toggleMenu();
-        }
-        // Cerrar con swipe izquierdo
-        else if (isOpen && diffX < -60) {
-            toggleMenu();
-        }
-    }, { passive: true });
-}
-
-// Iniciar cuando el DOM esté listo
-if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', initSwipe);
-} else {
-    initSwipe();
-}
+        // === RESTO DE FUNCIONES (sin cambios) ===
         function save() { 
             localStorage.setItem('poli_vFinal', JSON.stringify(mesas)); 
             localStorage.setItem('poli_historial', JSON.stringify(historial));
