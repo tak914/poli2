@@ -54,48 +54,71 @@
             visibility: visible;
         }
 
+        /* ✅ Menú fluido con transform */
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 280px;
+            height: 100%;
+            background: linear-gradient(
+                to bottom,
+                rgba(241, 246, 249, 0.4) 0%,
+                rgba(241, 246, 249, 0.25) 100%
+            );
+            backdrop-filter: blur(3px);
+            -webkit-backdrop-filter: blur(3px);
+            transform: translateX(-100%);
+            transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
+            will-change: transform;
+            color: #222;
+            z-index: 2000;
+            padding: 20px;
+            padding-top: calc(20px + env(safe-area-inset-top, 0px));
+            box-sizing: border-box;
+            overflow-y: auto;
+            border-right: 1px solid rgba(255, 255, 255, 0.25);
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
+            -webkit-font-smoothing: antialiased;
+        }
+        [data-theme="dark"] .sidebar {
+            background: linear-gradient(
+                to bottom,
+                rgba(18, 18, 18, 0.5) 0%,
+                rgba(18, 18, 18, 0.35) 100%
+            );
+            color: #f0f0f0;
+            border-right-color: rgba(255, 255, 255, 0.15);
+            box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
+        }
+        .sidebar.open {
+            transform: translateX(0);
+        }
 
+        /* ✅ Corrección de alineación en el header */
+        .sidebar-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            flex-wrap: nowrap;
+            min-height: 40px;
+        }
 
+        .sidebar-header button {
+            background: none;
+            border: none;
+            font-size: 24px;
+            cursor: pointer;
+            flex-shrink: 0;
+            width: 40px;
+            height: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--accent);
+        }
 
-     .sidebar {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 280px;
-    height: 100%;
-    background: linear-gradient(
-        to bottom,
-        rgba(241, 246, 249, 0.4) 0%,
-        rgba(241, 246, 249, 0.25) 100%
-    );
-    backdrop-filter: blur(3px);
-    -webkit-backdrop-filter: blur(3px);
-    transform: translateX(-100%);
-    transition: transform 0.3s cubic-bezier(0.25, 0.8, 0.25, 1);
-    will-change: transform;
-    color: #222;
-    z-index: 2000;
-    padding: 20px;
-    padding-top: calc(20px + env(safe-area-inset-top, 0px));
-    box-sizing: border-box;
-    overflow-y: auto;
-    border-right: 1px solid rgba(255, 255, 255, 0.25);
-    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.1);
-    -webkit-font-smoothing: antialiased;
-}
-[data-theme="dark"] .sidebar {
-    background: linear-gradient(
-        to bottom,
-        rgba(18, 18, 18, 0.5) 0%,
-        rgba(18, 18, 18, 0.35) 100%
-    );
-    color: #f0f0f0;
-    border-right-color: rgba(255, 255, 255, 0.15);
-    box-shadow: 2px 0 12px rgba(0, 0, 0, 0.2);
-}
-.sidebar.open {
-    transform: translateX(0);
-}
         .menu-fab {
             position: fixed;
             bottom: 20px;
@@ -255,8 +278,8 @@
             <h2 style="margin:0;">
                 <img src="https://i.postimg.cc/76L71FK9/round-pushpin-1f4cd-(1).png" alt="📍" style="width:24px; vertical-align:-1.5px;"> Poli 2
             </h2>
-            <button id="theme-toggle" onclick="toggleTheme()" style="background:none; border:none; font-size:24px; cursor:pointer;"></button>
-            <button onclick="toggleMenu()" style="background:none; border:none; font-size:30px; cursor:pointer; color:var(--accent);">✕</button>
+            <button id="theme-toggle" onclick="toggleTheme()"></button>
+            <button onclick="toggleMenu()">✕</button>
         </div>
         <button class="btn-footer" style="background:var(--accent); margin-bottom:20px;" onclick="crearMesa()">+ Nueva Mesa</button>
         <div id="lista-mesas"></div>
@@ -276,6 +299,7 @@
         <div id="area-operativa" class="hidden">
             <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
 
+            <!-- Contenido de categorías (igual que antes) -->
             <div class="categoria-box">
                 <h3>
                     <img src="https://i.postimg.cc/Yvym372n/hamburger-1f354.png" alt="🍔" style="width:22px; vertical-align:-4px;"> Comidas
@@ -471,7 +495,7 @@
         let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
         let mesaActual = null;
 
-        // === SWIPE SIMPLE Y FUNCIONAL ===
+        // === SWIPE FUNCIONAL ===
         let touchStartX = 0;
         let touchEndX = 0;
 
@@ -485,11 +509,9 @@
             const sidebar = document.getElementById('sidebar');
             const isOpen = sidebar.classList.contains('open');
 
-            // Abrir: swipe derecho desde el borde izquierdo (x < 50)
             if (!isOpen && diff > 50 && touchStartX < 50) {
                 toggleMenu();
             }
-            // Cerrar: swipe izquierdo con menú abierto
             else if (isOpen && diff < -50) {
                 toggleMenu();
             }
