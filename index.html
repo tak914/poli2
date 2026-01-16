@@ -282,6 +282,12 @@
         }
         .hidden { display: none !important; }
 
+        /* ✅ Estilo de foco para la barra de búsqueda */
+        #search-container-compact:focus-within > div {
+            border-color: #00C9FF !important;
+            box-shadow: 0 0 0 2px rgba(0, 201, 255, 0.2);
+        }
+
         @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
         @keyframes popIn { to { opacity: 1; transform: translateY(0); } }
     </style>
@@ -304,66 +310,6 @@
         <button class="btn-footer" style="background:var(--success)" onclick="verCierreCaja()">📊 Cierre de Caja</button>
     </aside>
 
-    <!-- ✅ BÚSQUEDA EN LA ESQUINA SUPERIOR DERECHA -->
-    <div id="search-container" style="
-        position: sticky;
-        top: env(safe-area-inset-top, 0px);
-        z-index: 100;
-        background: var(--bg);
-        padding: 10px 0;
-        margin: -10px -20px 20px -20px;
-        box-shadow: 0 2px 8px rgba(0,0,0,0.1);
-    ">
-        <div style="display: flex; justify-content: flex-end; padding: 0 20px;">
-            <button id="search-toggle" onclick="toggleSearch()" style="
-                background: var(--accent);
-                color: white;
-                border: none;
-                width: 40px;
-                height: 40px;
-                border-radius: 50%;
-                font-size: 20px;
-                cursor: pointer;
-                box-shadow: 0 2px 6px rgba(0,0,0,0.2);
-                display: flex;
-                align-items: center;
-                justify-content: center;
-            ">🔍</button>
-        </div>
-        
-        <div id="search-dropdown" style="
-            display: none;
-            position: absolute;
-            top: 60px;
-            right: 20px;
-            left: 20px;
-            background: var(--card-bg);
-            border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0,0,0,0.15);
-            max-height: 300px;
-            overflow-y: auto;
-            z-index: 101;
-            border: 1px solid rgba(0,129,201,0.3);
-        ">
-            <input type="text" id="search-input" placeholder="Buscar comidas, bebidas..." 
-                style="
-                    width: 100%;
-                    padding: 14px 20px;
-                    border: none;
-                    font-size: 16px;
-                    background: var(--card-bg);
-                    color: var(--text-color);
-                    border-bottom: 1px solid rgba(0,0,0,0.1);
-                    box-sizing: border-box;
-                    outline: none;
-                "
-                oninput="filterSearchResults()"
-                onkeydown="handleSearchKey(event)"
-            >
-            <div id="search-results" style="padding: 10px 0;"></div>
-        </div>
-    </div>
-
     <main class="main-content">
         <div id="pantalla-vacia" style="text-align:center; margin-top:80px;">
             <img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png  " alt="Logo" style="width:250px; border-radius:20px;">
@@ -375,6 +321,57 @@
 
         <div id="area-operativa" class="hidden">
             <h1 id="titulo-mesa" style="text-align:center;">Mesa</h1>
+            
+            <!-- ✅ Barra de búsqueda píldora profesional -->
+            <div id="search-container-compact" style="
+                display: none;
+                margin: 12px 16px 16px 16px;
+            ">
+                <div style="
+                    display: flex;
+                    align-items: center;
+                    background: var(--card-bg);
+                    border: 1px solid rgba(0, 129, 201, 0.3);
+                    border-radius: 50px;
+                    padding: 0 16px;
+                    height: 48px;
+                    transition: border-color 0.2s ease;
+                " 
+                onclick="document.getElementById('search-input-compact').focus()">
+                    <span style="
+                        color: #00C9FF; 
+                        font-size: 18px; 
+                        margin-right: 12px;
+                        width: 20px;
+                        text-align: center;
+                    ">🔍</span>
+                    <input type="text" id="search-input-compact" 
+                           placeholder="Buscar comidas o bebidas..." 
+                           style="
+                               flex: 1;
+                               border: none;
+                               background: transparent;
+                               color: var(--text-color);
+                               font-size: 15px;
+                               outline: none;
+                               padding: 0;
+                               height: 100%;
+                           "
+                           oninput="filterSearchCompact()"
+                           onblur="setTimeout(() => document.getElementById('search-results-compact').style.display = 'none', 200)"
+                    >
+                </div>
+                <div id="search-results-compact" style="
+                    display: none;
+                    background: var(--card-bg);
+                    border-radius: 12px;
+                    box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+                    max-height: 280px;
+                    overflow-y: auto;
+                    margin-top: 8px;
+                    border: 1px solid rgba(0,129,201,0.3);
+                "></div>
+            </div>
 
             <!-- Contenido de categorías -->
             <div class="categoria-box">
@@ -631,130 +628,165 @@
             }
         });
 
+        // === BÚSQUEDA COMPACTA ===
+        let allProductsCompact = [];
 
-
-// === BÚSQUEDA CORREGIDA ===
-let allProducts = [];
-
-function initializeSearch() {
-    allProducts = [];
-    
-    // Extraer productos directamente (sin depender de <select>)
-    const products = [
-        // Comidas
-        { name: 'Papas Cono $4000', price: 4000 },
-        { name: 'Bandeja Común $6000', price: 6000 },
-        { name: 'Bandeja Cheddar $7000', price: 7000 },
-        { name: 'Hamburguesa Simple $6000', price: 6000 },
-        { name: 'Hamburguesa Completa $9000', price: 9000 },
-        { name: 'Pizza Común $9000', price: 9000 },
-        { name: 'Pizza Especial $11000', price: 11000 },
-        { name: 'Pizza Calabresa $12000', price: 12000 },
-        { name: 'Pizza Provenzal $11000', price: 11000 },
-        { name: 'Pizza Napolitana $11000', price: 11000 },
-        { name: 'Mila Simple $8000', price: 8000 },
-        { name: 'Mila Completo $10000', price: 10000 },
-        { name: 'S. Miga $5000', price: 5000 },
-        { name: 'Carlitos $6000', price: 6000 },
-        { name: 'Triples $7000', price: 7000 },
-        { name: 'Tarta J&Q Entera $12000', price: 12000 },
-        { name: 'Tarta J&Q Media $6000', price: 6000 },
-        { name: 'Tarta Verdura Entera $11000', price: 11000 },
-        { name: 'Tarta Verdura Media $5500', price: 5500 },
-        { name: 'Tarta Pollo Entera $12000', price: 12000 },
-        { name: 'Tarta Pollo Media $6000', price: 6000 },
-        { name: 'Empanada Carne $1500', price: 1500 },
-        { name: 'Docena Carne $13000', price: 13000 },
-        { name: 'Empanada Pollo $1500', price: 1500 },
-        { name: 'Docena Pollo $13000', price: 13000 },
-        { name: 'Pancho Simple $1500', price: 1500 },
-        { name: 'Combo Pancho+Lata $3000', price: 3000 },
+       function initializeSearchCompact() {
+    allProductsCompact = [
+        // Comidas - Papas
+        { name: 'Papas Cono', price: 4000, category: 'papas' },
+        { name: 'Bandeja Común', price: 6000, category: 'papas' },
+        { name: 'Bandeja Cheddar', price: 7000, category: 'papas' },
         
-        // Bebidas
-        { name: 'Pepsi 500ml $2000', price: 2000 },
-        { name: 'Pepsi Lata $2000', price: 2000 },
-        { name: 'Pepsi 1.5L $4000', price: 4000 },
-        { name: '7up 500ml $2000', price: 2000 },
-        { name: '7up Lata $2000', price: 2000 },
-        { name: '7up 1.5L $4000', price: 4000 },
-        { name: 'Mirinda 1.5L $3500', price: 3500 },
-        { name: 'H2O 1.5L $3500', price: 3500 },
-        { name: 'Paso Toros 1.5L $4000', price: 4000 },
-        { name: 'Quilmes 1L $5000', price: 5000 },
-        { name: 'Quilmes Negra $5000', price: 5000 },
-        { name: 'Budweiser 1L $5000', price: 5000 },
-        { name: 'Lata Budweiser $2000', price: 2000 },
-        { name: 'Brahma 1L $4500', price: 4500 },
-        { name: 'Stella 1L $6000', price: 6000 },
-        { name: 'Corona 330ml $3500', price: 3500 },
-        { name: 'Agua 500ml $2000', price: 2000 },
-        { name: 'Agua 1.5L $2500', price: 2500 },
-        { name: 'AguaFrut 1.5L $3500', price: 3500 },
-        { name: 'Gatorade $5000', price: 5000 },
-        { name: 'Nanpe Tinto $4000', price: 4000 },
-        { name: 'Alma Mora $8000', price: 8000 },
-        { name: 'Chacabuco Blanco $8000', price: 8000 },
-        { name: 'Jarra Fernet $8000', price: 8000 },
-        { name: 'Jarra Gancia $6000', price: 6000 },
+        // Comidas - Hamburguesas
+        { name: 'Hamburguesa Simple', price: 6000, category: 'hamburguesa' },
+        { name: 'Hamburguesa Completa', price: 9000, category: 'hamburguesa' },
         
-        // Postres
-        { name: 'Ens. Fruta 250ml $2000', price: 2000 },
-        { name: 'Ens. Fruta 500ml $4000', price: 4000 },
-        { name: 'Palito de Agua $600', price: 600 },
-        { name: 'Bombón $1500', price: 1500 },
-        { name: 'Alfajor $2000', price: 2000 },
-        { name: 'Cono $2500', price: 2500 },
-        { name: 'Tacita $2500', price: 2500 },
+        // Comidas - Pizzas
+        { name: 'Pizza Común', price: 9000, category: 'pizza' },
+        { name: 'Pizza Especial', price: 11000, category: 'pizza' },
+        { name: 'Pizza Calabresa', price: 12000, category: 'pizza' },
+        { name: 'Pizza Provenzal', price: 11000, category: 'pizza' },
+        { name: 'Pizza Napolitana', price: 11000, category: 'pizza' },
+        
+        // Comidas - Sándwiches
+        { name: 'Mila Simple', price: 8000, category: 'sándwich' },
+        { name: 'Mila Completo', price: 10000, category: 'sándwich' },
+        { name: 'S. Miga', price: 5000, category: 'sándwich' },
+        { name: 'Carlitos', price: 6000, category: 'sándwich' },
+        { name: 'Triples', price: 7000, category: 'sándwich' },
+        
+        // Comidas - Tartas
+        { name: 'Tarta J&Q Entera', price: 12000, category: 'tarta' },
+        { name: 'Tarta J&Q Media', price: 6000, category: 'tarta' },
+        { name: 'Tarta Verdura Entera', price: 11000, category: 'tarta' },
+        { name: 'Tarta Verdura Media', price: 5500, category: 'tarta' },
+        { name: 'Tarta Pollo Entera', price: 12000, category: 'tarta' },
+        { name: 'Tarta Pollo Media', price: 6000, category: 'tarta' },
+        
+        // Comidas - Empanadas
+        { name: 'Empanada Carne', price: 1500, category: 'empanada' },
+        { name: 'Docena Carne', price: 13000, category: 'empanada' },
+        { name: 'Empanada Pollo', price: 1500, category: 'empanada' },
+        { name: 'Docena Pollo', price: 13000, category: 'empanada' },
+        
+        // Comidas - Panchos
+        { name: 'Pancho Simple', price: 1500, category: 'pancho' },
+        { name: 'Combo Pancho+Lata', price: 3000, category: 'pancho' },
+        
+        // Bebidas - Gaseosas
+        { name: 'Pepsi 500ml', price: 2000, category: 'gaseosa' },
+        { name: 'Pepsi Lata', price: 2000, category: 'gaseosa' },
+        { name: 'Pepsi 1.5L', price: 4000, category: 'gaseosa' },
+        { name: '7up 500ml', price: 2000, category: 'gaseosa' },
+        { name: '7up Lata', price: 2000, category: 'gaseosa' },
+        { name: '7up 1.5L', price: 4000, category: 'gaseosa' },
+        { name: 'Mirinda 1.5L', price: 3500, category: 'gaseosa' },
+        { name: 'H2O 1.5L', price: 3500, category: 'gaseosa' },
+        { name: 'Paso Toros 1.5L', price: 4000, category: 'gaseosa' },
+        
+        // Bebidas - Cervezas
+        { name: 'Quilmes 1L', price: 5000, category: 'cerveza' },
+        { name: 'Quilmes Negra', price: 5000, category: 'cerveza' },
+        { name: 'Budweiser 1L', price: 5000, category: 'cerveza' },
+        { name: 'Lata Budweiser', price: 2000, category: 'cerveza' },
+        { name: 'Brahma 1L', price: 4500, category: 'cerveza' },
+        { name: 'Stella 1L', price: 6000, category: 'cerveza' },
+        { name: 'Corona 330ml', price: 3500, category: 'cerveza' },
+        
+        // Bebidas - Agua/Gatorade
+        { name: 'Agua 500ml', price: 2000, category: 'agua' },
+        { name: 'Agua 1.5L', price: 2500, category: 'agua' },
+        { name: 'AguaFrut 1.5L', price: 3500, category: 'agua' },
+        { name: 'Gatorade', price: 5000, category: 'agua' },
+        
+        // Bebidas - Vinos/Jarra
+        { name: 'Nanpe Tinto', price: 4000, category: 'vino' },
+        { name: 'Alma Mora', price: 8000, category: 'vino' },
+        { name: 'Chacabuco Blanco', price: 8000, category: 'vino' },
+        { name: 'Jarra Fernet', price: 8000, category: 'vino' },
+        { name: 'Jarra Gancia', price: 6000, category: 'vino' },
+        
+        // Postres - Ensalada de fruta
+        { name: 'Ens. Fruta 250ml', price: 2000, category: 'postre' },
+        { name: 'Ens. Fruta 500ml', price: 4000, category: 'postre' },
+        
+        // Postres - Helados
+        { name: 'Palito de Agua', price: 600, category: 'helado' },
+        { name: 'Bombón', price: 1500, category: 'helado' },
+        { name: 'Alfajor', price: 2000, category: 'helado' },
+        { name: 'Cono', price: 2500, category: 'helado' },
+        { name: 'Tacita', price: 2500, category: 'helado' },
         
         // Botones rápidos
-        { name: 'Dona $700', price: 700 },
-        { name: 'Torta Frita $500', price: 500 },
-        { name: 'Picada $20000', price: 20000 },
-        { name: 'Jarra Hielo $1000', price: 1000 },
-        { name: 'Agua Caliente $500', price: 500 }
+        { name: 'Dona', price: 700, category: 'postre' },
+        { name: 'Torta Frita', price: 500, category: 'postre' },
+        { name: 'Picada', price: 20000, category: 'comida' },
+        { name: 'Jarra Hielo', price: 1000, category: 'bebida' },
+        { name: 'Agua Caliente', price: 500, category: 'bebida' }
     ];
-    
-    allProducts = products;
 }
 
-function toggleSearch() {
-    const dropdown = document.getElementById('search-dropdown');
-    const input = document.getElementById('search-input');
-    
-    if (dropdown.style.display === 'block') {
-        // ✅ Limpiar al cerrar
-        dropdown.style.display = 'none';
-        input.value = '';
-        document.getElementById('search-results').innerHTML = '<div style="padding: 12px 20px; color: #666;">Escribe para buscar...</div>';
-    } else {
-        if (allProducts.length === 0) {
-            initializeSearch();
-        }
-        dropdown.style.display = 'block';
-        setTimeout(() => input.focus(), 100);
-    }
-}
+        
 
-function filterSearchResults() {
-    const query = document.getElementById('search-input').value.toLowerCase().trim();
-    const resultsDiv = document.getElementById('search-results');
+function filterSearchCompact() {
+    const input = document.getElementById('search-input-compact');
+    const query = input.value.toLowerCase().trim();
+    const resultsDiv = document.getElementById('search-results-compact');
     
     if (query === '') {
-        resultsDiv.innerHTML = '<div style="padding: 12px 20px; color: #666;">Escribe para buscar...</div>';
+        resultsDiv.style.display = 'none';
         return;
     }
     
-    const matches = allProducts.filter(p => 
-        p.name.toLowerCase().includes(query)
-    ).slice(0, 15);
+    // Palabras clave para activar filtros de categoría
+    const categoryKeywords = {
+        'papa': 'papas',
+        'pizza': 'pizza',
+        'vino': 'vino',
+        'hamburguesa': 'hamburguesa',
+        'sandwich': 'sándwich',
+        'tarta': 'tarta',
+        'empanada': 'empanada',
+        'pancho': 'pancho',
+        'gaseosa': 'gaseosa',
+        'cerveza': 'cerveza',
+        'agua': 'agua',
+        'helado': 'helado'
+    };
+    
+    // Detectar si la búsqueda coincide con una categoría
+    let targetCategory = null;
+    for (const [keyword, category] of Object.entries(categoryKeywords)) {
+        if (query.includes(keyword)) {
+            targetCategory = category;
+            break;
+        }
+    }
+    
+    // Filtrar productos
+    let matches = allProductsCompact.filter(p => 
+        p.name.toLowerCase().includes(query) || 
+        (targetCategory && p.category === targetCategory)
+    );
+    
+    // Si no hay coincidencias directas pero hay categoría detectada, mostrar todos de esa categoría
+    if (matches.length === 0 && targetCategory) {
+        matches = allProductsCompact.filter(p => p.category === targetCategory);
+    }
+    
+    // Limitar resultados
+    matches = matches.slice(0, 10);
     
     if (matches.length === 0) {
-        resultsDiv.innerHTML = '<div style="padding: 12px 20px; color: #666;">No se encontraron resultados</div>';
+        resultsDiv.style.display = 'none';
         return;
     }
     
-    resultsDiv.innerHTML = matches.map((p, index) => `
-        <div onclick="agregarProductoDirecto('${p.name.replace(/'/g, "\\'")}', ${p.price})" 
+    resultsDiv.innerHTML = matches.map(p => `
+        <div onclick="agregarProd('${p.name}', ${p.price}); 
+                     document.getElementById('search-input-compact').value = '';
+                     document.getElementById('search-results-compact').style.display = 'none';"
              style="
                  padding: 12px 20px;
                  cursor: pointer;
@@ -765,43 +797,13 @@ function filterSearchResults() {
              onmouseout="this.style.background=''"
         >
             <div style="font-weight: bold; color: var(--accent);">${p.name}</div>
+            <div style="font-size: 14px; color: #666;">$${p.price}</div>
         </div>
     `).join('');
-}
-
-function handleSearchKey(event) {
-    if (event.key === 'Escape') {
-        document.getElementById('search-dropdown').style.display = 'none';
-        document.getElementById('search-input').value = '';
-        document.getElementById('search-results').innerHTML = '<div style="padding: 12px 20px; color: #666;">Escribe para buscar...</div>';
-    }
-}
-
-// ✅ Nueva función: agrega productos SIN depender de <select>
-function agregarProductoDirecto(nombreCompleto, precio) {
-    // Extraer solo el nombre (sin precio)
-    const nombre = nombreCompleto.split(' $')[0];
-    agregarProd(nombre, precio);
     
-    // Cerrar búsqueda
-    document.getElementById('search-dropdown').style.display = 'none';
-    document.getElementById('search-input').value = '';
-    document.getElementById('search-results').innerHTML = '<div style="padding: 12px 20px; color: #666;">Escribe para buscar...</div>';
+    resultsDiv.style.display = 'block';
 }
-        // === CERRAR BÚSQUEDA AL TOCAR FUERA ===
-        document.addEventListener('click', (e) => {
-            const searchContainer = document.getElementById('search-container');
-            const searchDropdown = document.getElementById('search-dropdown');
-            
-            if (!searchContainer.contains(e.target)) {
-                searchDropdown.style.display = 'none';
-                document.getElementById('search-input').value = '';
-            }
-        });
 
-        document.getElementById('search-container').addEventListener('click', (e) => {
-            e.stopPropagation();
-        });
 
         // === RESTO DEL CÓDIGO ===
         function save() { 
@@ -844,6 +846,10 @@ function agregarProductoDirecto(nombreCompleto, precio) {
             document.getElementById('titulo-mesa').innerText = `Mesa: ${n}`;
             document.getElementById('nombre-mesa-ticket').innerText = n;
             document.getElementById('nota-input').value = mesas[n].nota || "";
+            
+            // ✅ Mostrar contenedor de búsqueda completo
+            document.getElementById('search-container-compact').style.display = 'block';
+            
             actualizarTicket(); renderizarMesas();
         }
 
@@ -909,19 +915,43 @@ function agregarProductoDirecto(nombreCompleto, precio) {
             save(); actualizarTicket(); renderizarMesas();
         }
 
-        function verCierreCaja() {
-            const modal = document.getElementById('modal-caja');
-            const detalle = document.getElementById('caja-detalle');
-            let totalGral = 0; detalle.innerHTML = "";
-            historial.forEach(v => {
-                totalGral += v.total;
-                detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between">
-                    <span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b>
-                </div>`;
-            });
-            document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
-            modal.classList.remove('hidden');
-        }
+       function verCierreCaja() {
+  if (historial.length === 0) {
+    alert("No hay ventas para cerrar.");
+    return;
+  }
+
+  const modal = document.getElementById('modal-caja');
+  const detalle = document.getElementById('caja-detalle');
+  let totalGral = 0;
+  detalle.innerHTML = "";
+
+  historial.forEach(v => {
+    totalGral += v.total;
+    detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between">
+      <span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b>
+    </div>`;
+  });
+  document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
+  modal.classList.remove('hidden');
+
+  // ✅ ENVIAR A GOOGLE SHEETS
+  const url = 'https://script.google.com/macros/s/AKfycbzxRyqar2FXJSvnw-bYFCRvI4_RcKBg797QuBIRlhoqDcNXOBnkRDomPNGEyejywV-R7g/exec';
+  
+  fetch(url, {
+    method: 'POST',
+    mode: 'no-cors',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ ventas: historial })
+  })
+  .then(() => {
+    console.log("✅ Cierre enviado a Google Sheets");
+  })
+  .catch(err => {
+    console.error("❌ Error al enviar cierre:", err);
+    alert("⚠️ No se pudo enviar el cierre a la nube. Revisa la consola.");
+  });
+}
 
         function reiniciarCaja() {
             if (confirm("¿Limpiar historial y todas las mesas?")) {
@@ -984,7 +1014,7 @@ function agregarProductoDirecto(nombreCompleto, precio) {
             document.querySelector('meta[name="theme-color"]').setAttribute('content', themeColor);
             renderizarMesas(); 
             updateThemeToggleIcon();
-            initializeSearch();
+            initializeSearchCompact();
         };
     </script>
 </body>
