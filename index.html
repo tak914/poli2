@@ -906,14 +906,36 @@ function filterSearchCompact() {
             }
         }
 
-        function cobrar() {
-            const m = mesas[mesaActual]; m.cobrada = true;
-            let totalMesa = 0; for(let n in m.items) totalMesa += m.items[n].precio * m.items[n].qty;
-            const index = historial.findIndex(v => v.mesa === mesaActual);
-            const venta = { mesa: mesaActual, total: totalMesa, fecha: new Date().toLocaleTimeString() };
-            if (index !== -1) historial[index] = venta; else historial.push(venta);
-            save(); actualizarTicket(); renderizarMesas();
-        }
+       function cobrar() {
+  const m = mesas[mesaActual];
+  m.cobrada = true;
+
+  // Calcular total
+  let totalMesa = 0;
+  for (let n in m.items) {
+    totalMesa += m.items[n].precio * m.items[n].qty;
+  }
+
+  // Guardar venta con ítems
+  const venta = {
+    mesa: mesaActual,
+    total: totalMesa,
+    fecha: new Date().toLocaleTimeString(),
+    items: m.items // ✅ Incluir los productos
+  };
+
+  // Actualizar historial
+  const index = historial.findIndex(v => v.mesa === mesaActual);
+  if (index !== -1) {
+    historial[index] = venta;
+  } else {
+    historial.push(venta);
+  }
+
+  save();
+  actualizarTicket();
+  renderizarMesas();
+}
 
        function verCierreCaja() {
   if (historial.length === 0) {
@@ -936,9 +958,20 @@ function filterSearchCompact() {
   modal.classList.remove('hidden');
 
   // ✅ ENVIAR A GOOGLE SHEETS
-  const urlBase = 'https://script.google.com/macros/s/AKfycbyAcPUf8_3p1uUIFEClQ224DERs5o_stDWZ3PRMo-Wg9JRPuWM9O_FBXofgfG7ZDA1EJA/exec';
-  const params = '?datos=' + encodeURIComponent(JSON.stringify(historial));
-  
+  const urlBase = 'https://script.google.com/macros/s/AKfycbyHUZGbX4JcxDraow_pRIWhU5wbxXALjzYlIdV1lkuLukRagczEn4B4ihQZjSt9Bw7Xlw/exec';
+  // Asegurar que cada venta tenga 'items'
+const historialConItems = historial.map(v => {
+  // Si ya tiene items (por la nueva función cobrar), usarlo
+  // Si no, dejar vacío
+  return {
+    mesa: v.mesa,
+    total: v.total,
+    fecha: v.fecha,
+    items: v.items || {}
+  };
+});
+
+const params = '?datos=' + encodeURIComponent(JSON.stringify(historialConItems));
   fetch(urlBase + params, {
     method: 'POST',
     mode: 'no-cors'
