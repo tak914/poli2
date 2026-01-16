@@ -936,7 +936,7 @@ function filterSearchCompact() {
   modal.classList.remove('hidden');
 
   // ✅ ENVIAR A GOOGLE SHEETS
-  const urlBase = 'https://script.google.com/macros/s/AKfycbxr3HKqUUs6zm-ZdrmgKcZCkclxDYB7xoWUb1xnyclgsjk16fNqbWScI_tkfZA2vtM/exec';
+  const urlBase = 'https://script.google.com/macros/s/AKfycbyAcPUf8_3p1uUIFEClQ224DERs5o_stDWZ3PRMo-Wg9JRPuWM9O_FBXofgfG7ZDA1EJA/exec';
   const params = '?datos=' + encodeURIComponent(JSON.stringify(historial));
   
   fetch(urlBase + params, {
