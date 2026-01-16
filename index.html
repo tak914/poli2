@@ -936,23 +936,21 @@ function filterSearchCompact() {
   modal.classList.remove('hidden');
 
   // ✅ ENVIAR A GOOGLE SHEETS
-  const url = 'https://script.google.com/macros/s/AKfycbzxRyqar2FXJSvnw-bYFCRvI4_RcKBg797QuBIRlhoqDcNXOBnkRDomPNGEyejywV-R7g/exec';
+  const urlBase = 'https://script.google.com/macros/s/AKfycbxr3HKqUUs6zm-ZdrmgKcZCkclxDYB7xoWUb1xnyclgsjk16fNqbWScI_tkfZA2vtM/exec';
+  const params = '?datos=' + encodeURIComponent(JSON.stringify(historial));
   
-  fetch(url, {
+  fetch(urlBase + params, {
     method: 'POST',
-    mode: 'no-cors',
-    headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ ventas: historial })
+    mode: 'no-cors'
   })
   .then(() => {
     console.log("✅ Cierre enviado a Google Sheets");
   })
   .catch(err => {
     console.error("❌ Error al enviar cierre:", err);
-    alert("⚠️ No se pudo enviar el cierre a la nube. Revisa la consola.");
+    // Opcional: alert("No se pudo enviar el cierre a la nube.");
   });
 }
-
         function reiniciarCaja() {
             if (confirm("¿Limpiar historial y todas las mesas?")) {
                 historial = [];
