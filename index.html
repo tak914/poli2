@@ -922,13 +922,21 @@ document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
   }
 });
 
+
+
+
 const btnContainer = document.getElementById('btn-container');
 if (m.cobrada) {
-btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir</button>
-<button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button>
-<button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>`;
+    btnContainer.innerHTML = `
+        <button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir</button>
+        <button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button>
+        <button class="btn-footer" style="background:var(--dark)" onclick="liberar()">🧹 Liberar Mesa</button>
+    `;
 } else {
-btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>`;
+    btnContainer.innerHTML = `
+        <button class="btn-footer" style="background:var(--success)" onclick="cobrar()">💰 Cobrar Mesa</button>
+        <button class="btn-footer" style="background:#25D366" onclick="enviarWhatsapp()">📱 WhatsApp</button>
+    `;
 }
 }
 function cobrar() {
