@@ -8,8 +8,8 @@
 <meta name="theme-color" content="#F1F6F9">
 <meta name="mobile-web-app-capable" content="yes">
 <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-<link rel="apple-touch-icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png  ">
-<link rel="icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png  ">
+<link rel="apple-touch-icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png">
+<link rel="icon" href="https://i.postimg.cc/g2D57d2d/43-sin-titulo-20260107215026.png">
 <style>
 :root {
 --accent: #0081C9; --bg: #F1F6F9; --dark: #212A3E; --danger: #FF6464;
@@ -172,6 +172,13 @@ box-shadow: 0 2px 6px rgba(0, 90, 135, 0.4) !important;
 }
 .add-btn:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 .add-btn:active { transform: scale(0.95); }
+
+/* ✅ Estilo para fast-btn activo */
+.fast-btn.activo {
+background: #005a87 !important; /* mismo azul oscuro */
+box-shadow: 0 2px 6px rgba(0, 90, 135, 0.4) !important;
+}
+
 .fast-btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .fast-btn {
 background: var(--accent);
@@ -292,7 +299,7 @@ select:focus {
 <aside class="sidebar" id="sidebar">
 <div class="sidebar-header">
 <h2 style="margin:0;">
-<img src="https://i.postimg.cc/76L71FK9/round-pushpin-1f4cd-  (1).png" alt="📍" style="width:28px; vertical-align:-2px;"> Poli 2
+<img src="https://i.postimg.cc/76L71FK9/round-pushpin-1f4cd-(1).png" alt="📍" style="width:28px; vertical-align:-2px;"> Poli 2
 </h2>
 <button id="theme-toggle" onclick="toggleTheme()"></button>
 <button id="close-menu" onclick="toggleMenu()">✕</button>
@@ -304,10 +311,10 @@ select:focus {
 </aside>
 <main class="main-content">
 <div id="pantalla-vacia" style="text-align:center; margin-top:80px;">
-<img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png  " alt="Logo" style="width:250px; border-radius:20px;">
+<img src="https://i.postimg.cc/h4Nq8SXn/42-sin-titulo-20260107214826.png" alt="Logo" style="width:250px; border-radius:20px;">
 <h2>
 Bienvenido a Poli grupo 2
-<img src="https://i.postimg.cc/1tTBYGYg/round-pushpin-1f4cd.png  " alt="☀️" style="width:24px; vertical-align:-3px; margin-left:5px;">
+<img src="https://i.postimg.cc/1tTBYGYg/round-pushpin-1f4cd.png" alt="☀️" style="width:24px; vertical-align:-3px; margin-left:5px;">
 </h2>
 </div>
 <div id="area-operativa" class="hidden">
@@ -365,11 +372,11 @@ border: 1px solid rgba(0,129,201,0.3);
 <!-- Contenido de categorías -->
 <div class="categoria-box">
 <h3>
-<img src="https://i.postimg.cc/Yvym372n/hamburger-1f354.png  " alt="🍔" style="width:22px; vertical-align:-4px;"> Comidas
+<img src="https://i.postimg.cc/Yvym372n/hamburger-1f354.png" alt="🍔" style="width:22px; vertical-align:-4px;"> Comidas
 </h3>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/K1sgNbc9/french-fries-1f35f.png  " alt="🍟" style="width:18px; vertical-align:-3px;"> Papas:
+<img src="https://i.postimg.cc/K1sgNbc9/french-fries-1f35f.png" alt="🍟" style="width:18px; vertical-align:-3px;"> Papas:
 </span>
 <select id="papas-select">
 <option value="Papas Cono,4000">Cono $4000</option>
@@ -380,7 +387,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/Yvym372n/hamburger-1f354.png    " alt="🍔" style="width:18px; vertical-align:-3px;"> Hamburg.:
+<img src="https://i.postimg.cc/Yvym372n/hamburger-1f354.png" alt="🍔" style="width:18px; vertical-align:-3px;"> Hamburg.:
 </span>
 <select id="hamburg-select">
 <option value="Hamburguesa Simple,6000">Simple $6000</option>
@@ -390,7 +397,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/FYnJZvFV/slice-of-pizza-1f355.png  " alt="🍕" style="width:18px; vertical-align:-3px;"> Pizzas:
+<img src="https://i.postimg.cc/FYnJZvFV/slice-of-pizza-1f355.png" alt="🍕" style="width:18px; vertical-align:-3px;"> Pizzas:
 </span>
 <select id="pizza-select">
 <option value="Pizza Común,9000">Común $9000</option>
@@ -403,7 +410,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/fVg0KsWv/sandwich-1f96a.png  " alt="🥪" style="width:18px; vertical-align:-3px;"> Sándwich:
+<img src="https://i.postimg.cc/fVg0KsWv/sandwich-1f96a.png" alt="🥪" style="width:18px; vertical-align:-3px;"> Sándwich:
 </span>
 <select id="sand-select">
 <option value="Mila Simple,8000">Mila Simple $8000</option>
@@ -428,7 +435,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/YC7LcnF4/dumpling-1f95f.png  " alt="🥟" style="width:18px; vertical-align:-3px;"> Empan.:
+<img src="https://i.postimg.cc/YC7LcnF4/dumpling-1f95f.png" alt="🥟" style="width:18px; vertical-align:-3px;"> Empan.:
 </span>
 <select id="empa-select">
 <option value="Empa. Carne c/u,1500">Carne $1500</option>
@@ -440,7 +447,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/P5HvG3DC/hot-dog-1f32d.png  " alt="🌭" style="width:18px; vertical-align:-3px;"> Panchos:
+<img src="https://i.postimg.cc/P5HvG3DC/hot-dog-1f32d.png" alt="🌭" style="width:18px; vertical-align:-3px;"> Panchos:
 </span>
 <select id="pancho-select">
 <option value="Pancho,1500">Simple $1500</option>
@@ -449,24 +456,24 @@ border: 1px solid rgba(0,129,201,0.3);
 <button class="add-btn" onclick="agregarDeSelect('pancho-select')">+</button>
 </div>
 <div class="fast-btn-group">
-<button class="fast-btn" onclick="agregarProd('Dona', 700)">
-<img src="https://i.postimg.cc/zGNHmthb/doughnut-1f369.png  " alt="🍩" style="width:16px; vertical-align:-3px;"> Dona $700
+<button class="fast-btn" data-product="Dona" onclick="agregarProd('Dona', 700)">
+<img src="https://i.postimg.cc/zGNHmthb/doughnut-1f369.png" alt="🍩" style="width:16px; vertical-align:-3px;"> Dona $700
 </button>
-<button class="fast-btn" onclick="agregarProd('Torta Frita', 500)">
-<img src="https://i.postimg.cc/3wmKKYHT/torta-firta.png  " alt="🥯" style="width:20px; vertical-align:-5.5px;"> T. Frita $500
+<button class="fast-btn" data-product="Torta Frita" onclick="agregarProd('Torta Frita', 500)">
+<img src="https://i.postimg.cc/3wmKKYHT/torta-firta.png" alt="🥯" style="width:20px; vertical-align:-5.5px;"> T. Frita $500
 </button>
-<button class="fast-btn" onclick="agregarProd('Picada', 20000)">
-<img src="https://i.postimg.cc/d0rqqwKM/picada.png  " alt="🧀" style="width:23px; vertical-align:-7px;"> Picada $20k
+<button class="fast-btn" data-product="Picada" onclick="agregarProd('Picada', 20000)">
+<img src="https://i.postimg.cc/d0rqqwKM/picada.png" alt="🧀" style="width:23px; vertical-align:-7px;"> Picada $20k
 </button>
 </div>
 </div>
 <div class="categoria-box">
 <h3>
-<img src="https://i.postimg.cc/wjzRKfNN/cup-with-straw-1f964.png  " alt="🍹" style="width:22px; vertical-align:-4px;"> Bebidas
+<img src="https://i.postimg.cc/wjzRKfNN/cup-with-straw-1f964.png" alt="🍹" style="width:22px; vertical-align:-4px;"> Bebidas
 </h3>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/fLMkpJSg/46-sin-titulo-20260108112849.png  " alt="🥤" style="width:18px; vertical-align:-3px;"> Pepsi/7up:
+<img src="https://i.postimg.cc/fLMkpJSg/46-sin-titulo-20260108112849.png" alt="🥤" style="width:18px; vertical-align:-3px;"> Pepsi/7up:
 </span>
 <select id="gaseosa-select">
 <option value="Pepsi 500ml,2000">Pepsi 500ml $2000</option>
@@ -496,7 +503,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/Jz8Hw6XB/droplet-1f4a7.png  " alt="💧" style="width:18px; vertical-align:-3px;"> Agua/Gator.:
+<img src="https://i.postimg.cc/Jz8Hw6XB/droplet-1f4a7.png" alt="💧" style="width:18px; vertical-align:-3px;"> Agua/Gator.:
 </span>
 <select id="agua-select">
 <option value="Agua 500ml,2000">Agua 500ml $2000</option>
@@ -508,7 +515,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/RWbnRmC1/wine-glass-1f377.png  " alt="🍷" style="width:18px; vertical-align:-3px;"> Vinos/Jarra:
+<img src="https://i.postimg.cc/RWbnRmC1/wine-glass-1f377.png" alt="🍷" style="width:18px; vertical-align:-3px;"> Vinos/Jarra:
 </span>
 <select id="vino-select">
 <option value="Nanpe Tinto,4000">Nanpe Tinto $4000</option>
@@ -520,21 +527,21 @@ border: 1px solid rgba(0,129,201,0.3);
 <button class="add-btn" onclick="agregarDeSelect('vino-select')">+</button>
 </div>
 <div class="fast-btn-group">
-<button class="fast-btn" onclick="agregarProd('Jarra Hielo', 1000)">
+<button class="fast-btn" data-product="Jarra Hielo" onclick="agregarProd('Jarra Hielo', 1000)">
 🧊 Jarra Hielo $1000
 </button>
-<button class="fast-btn" onclick="agregarProd('Agua Caliente', 500)">
+<button class="fast-btn" data-product="Agua Caliente" onclick="agregarProd('Agua Caliente', 500)">
 🧉 Agua Caliente $500
 </button>
 </div>
 </div>
 <div class="categoria-box">
 <h3>
-<img src="https://i.postimg.cc/681G0K6C/ios-18-4-2762.png  " alt="🍓" style="width:22px; vertical-align:-4px;"> Postres
+<img src="https://i.postimg.cc/681G0K6C/ios-18-4-2762.png" alt="🍓" style="width:22px; vertical-align:-4px;"> Postres
 </h3>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/4YFh5G4F/soft-ice-cream-1f366.png    " alt="🍦" style="width:18px; vertical-align:-3px;"> Helados:
+<img src="https://i.postimg.cc/4YFh5G4F/soft-ice-cream-1f366.png" alt="🍦" style="width:18px; vertical-align:-3px;"> Helados:
 </span>
 <select id="helado-select">
 <option value="Palito de Agua,600">Palito de Agua $600</option>
@@ -547,7 +554,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/mrCbbBG4/ensalada-de-fruta.png  " alt="🍧" style="width:24px; vertical-align:-5px;"> Ens. Fruta:
+<img src="https://i.postimg.cc/mrCbbBG4/ensalada-de-fruta.png" alt="🍧" style="width:24px; vertical-align:-5px;"> Ens. Fruta:
 </span>
 <select id="fruit-select">
 <option value="Ens. Fruta 250ml,2000">250ml $2000</option>
@@ -767,7 +774,7 @@ function updateThemeToggleIcon() {
 const isDark = document.body.getAttribute('data-theme') === 'dark';
 const themeToggle = document.getElementById('theme-toggle');
 if (isDark) {
-themeToggle.innerHTML = '<img src="https://i.postimg.cc/1tTBYGYg/round-pushpin-1f4cd.png  " alt="☀️" style="width:24px; height:24px; vertical-align:-3px;">';
+themeToggle.innerHTML = '<img src="https://i.postimg.cc/1tTBYGYg/round-pushpin-1f4cd.png" alt="☀️" style="width:24px; height:24px; vertical-align:-3px;">';
 } else {
 themeToggle.innerHTML = '🌙';
 }
@@ -854,6 +861,66 @@ addButton.classList.add('activo');
 addButton.classList.remove('activo');
 }
 });
+
+// ✅ Guardar texto base la primera vez que se llama (solo si aún no está guardado)
+document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
+  if (!btn.hasAttribute('data-base-text')) {
+    btn.setAttribute('data-base-text', btn.innerHTML);
+  }
+});
+
+// ✅ Actualizar estado y texto de los fast-btn con data-product
+
+ 
+
+// ✅ Definir qué productos muestran cantidad
+const productosConCantidad = new Set(['Dona', 'Torta Frita']);
+
+// ✅ Guardar data-base-text en todos los fast-btn con data-product (una sola vez)
+document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
+  if (!btn.hasAttribute('data-base-text')) {
+    btn.setAttribute('data-base-text', btn.innerHTML);
+  }
+});
+
+// ✅ Actualizar estado visual de TODOS los fast-btn con data-product
+document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
+  const productName = btn.getAttribute('data-product');
+  const baseText = btn.getAttribute('data-base-text');
+  const mesa = mesas[mesaActual];
+  const isInPedido = mesa && mesa.items && mesa.items[productName];
+
+  if (productosConCantidad.has(productName)) {
+    // --- Comportamiento especial: Dona y Torta Frita ---
+    if (isInPedido) {
+      const qty = mesa.items[productName].qty;
+      const tempDiv = document.createElement('div');
+      tempDiv.innerHTML = baseText;
+      const img = tempDiv.querySelector('img');
+      const imgHTML = img ? img.outerHTML : '';
+      let textContent = (tempDiv.textContent || '').trim();
+      if (textContent.includes('$')) {
+        textContent = textContent.split('$')[0].trim();
+      }
+      const cleanName = textContent || productName;
+      btn.innerHTML = `${imgHTML} ${cleanName} x${qty}`;
+      btn.classList.add('activo');
+    } else {
+      btn.innerHTML = baseText;
+      btn.classList.remove('activo');
+    }
+  } else {
+    // --- Comportamiento normal: Picada, Jarra Hielo, Agua Caliente ---
+    if (isInPedido) {
+      btn.classList.add('activo');
+    } else {
+      btn.classList.remove('activo');
+    }
+    // El texto NO cambia: siempre muestra el precio
+    // (no tocamos innerHTML para estos)
+  }
+});
+
 const btnContainer = document.getElementById('btn-container');
 if (m.cobrada) {
 btnContainer.innerHTML = `<button class="btn-footer" style="background:var(--accent)" onclick="reabrir()">↩️ Reabrir</button>
@@ -969,7 +1036,7 @@ const i = m.items[n]; msg += `- ${i.qty}x ${n}: $${i.precio * i.qty}
 if(m.nota) msg += `_Nota: ${m.nota}_
 `;
 msg += `*TOTAL: $${total}*`;
-window.open(`https://wa.me/?text=  ${encodeURIComponent(msg)}`, '_blank');
+window.open(`https://wa.me/?text=${encodeURIComponent(msg)}`, '_blank');
 }
 function renderizarMesas() {
 const lista = document.getElementById('lista-mesas');
@@ -992,6 +1059,13 @@ document.querySelector('meta[name="theme-color"]').setAttribute('content', theme
 renderizarMesas();
 updateThemeToggleIcon();
 initializeSearchCompact();
+
+// Guardar texto base de los fast-btn con data-product
+document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
+  if (!btn.hasAttribute('data-base-text')) {
+    btn.setAttribute('data-base-text', btn.innerHTML);
+  }
+});
 };
 </script>
 </body>
