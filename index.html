@@ -173,6 +173,27 @@ box-shadow: 0 2px 6px rgba(0, 90, 135, 0.4) !important;
 .add-btn:hover { transform: scale(1.05); box-shadow: 0 4px 8px rgba(0,0,0,0.2); }
 .add-btn:active { transform: scale(0.95); }
 
+/* ✅ Botones rápidos fijos: tamaño constante y alineación estable */
+.fast-btn.fixed-size {
+  min-width: 130px;
+  height: 48px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  padding: 0 8px;
+  box-sizing: border-box;
+  font-size: 13px;
+}
+
+.fast-btn-group.fixed-row {
+  display: flex;
+  gap: 10px;
+  justify-content: space-between;
+  flex-wrap: nowrap;
+}
 /* ✅ Estilo para fast-btn activo */
 .fast-btn.activo {
 background: #005a87 !important; /* mismo azul oscuro */
@@ -181,17 +202,17 @@ box-shadow: 0 2px 6px rgba(0, 90, 135, 0.4) !important;
 
 .fast-btn-group { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 10px; }
 .fast-btn {
-background: var(--accent);
-color: white;
-border: none;
-padding: 10px;
-border-radius: 10px;
-font-weight: bold;
-cursor: pointer;
-flex: 1;
-font-size: 13px;
-white-space: nowrap;
-text-align: center;
+  background: var(--accent);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 10px;
+  font-weight: bold;
+  cursor: pointer;
+  flex: 1;
+  font-size: 13px;
+  white-space: nowrap;
+  text-align: center;
 }
 .fast-btn:hover { transform: scale(1.03); box-shadow: 0 3px 6px rgba(0,0,0,0.2); }
 .fast-btn:active { transform: scale(0.98); }
@@ -465,17 +486,21 @@ border: 1px solid rgba(0,129,201,0.3);
 </select>
 <button class="add-btn" onclick="agregarDeSelect('pancho-select')">+</button>
 </div>
-<div class="fast-btn-group">
-  <button class="fast-btn" data-product="Dona" onclick="agregarProd('Dona', 700)">
+<!-- Primera fila: Dona, T. Frita, Girasoles -->
+<!-- Botones rápidos corregidos -->
+<div class="fast-btn-group fixed-row">
+  <button class="fast-btn fixed-size" data-product="Dona" onclick="agregarProd('Dona', 700)">
     <img src="https://i.postimg.cc/zGNHmthb/doughnut-1f369.png" alt="🍩" style="width:16px; vertical-align:-3px;"> Dona $700
   </button>
-  <button class="fast-btn" data-product="Torta Frita" onclick="agregarProd('Torta Frita', 500)">
+  <button class="fast-btn fixed-size" data-product="Torta Frita" onclick="agregarProd('Torta Frita', 500)">
     <img src="https://i.postimg.cc/3wmKKYHT/torta-firta.png" alt="🥯" style="width:20px; vertical-align:-5.5px;"> T. Frita $500
   </button>
-  <button class="fast-btn" data-product="Picada" onclick="agregarProd('Picada', 20000)">
+</div>
+<div class="fast-btn-group fixed-row" style="margin-top: 8px;">
+  <button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Picada', 20000)">
     <img src="https://i.postimg.cc/d0rqqwKM/picada.png" alt="🧀" style="width:23px; vertical-align:-7px;"> Picada $20k
   </button>
-  <button class="fast-btn" data-product="Girasoles" onclick="agregarProd('Girasoles', 500)">
+  <button class="fast-btn fixed-size" data-product="Girasoles" onclick="agregarProd('Girasoles', 500)">
     🌻 Girasoles $500
   </button>
 </div>
@@ -559,11 +584,12 @@ border: 1px solid rgba(0,129,201,0.3);
 <img src="https://i.postimg.cc/4YFh5G4F/soft-ice-cream-1f366.png" alt="🍦" style="width:18px; vertical-align:-3px;"> Helados:
 </span>
 <select id="helado-select">
-<option value="Palito de Agua,600">Palito de Agua $600</option>
-<option value="Bombón,1500">Bombón $1500</option>
-<option value="Alfajor,2000">Alfajor $2000</option>
-<option value="Cono,2500">Cono $2500</option>
-<option value="Tacita,2500">Tacita $2500</option>
+  <option value="Palito de Agua,600">Palito de Agua $600</option>
+  <option value="Bombón,1500">Bombón $1500</option>
+  <option value="Alfajor,2000">Alfajor $2000</option>
+  <option value="Cono,2500">Cono $2500</option>
+  <option value="Tacita,2500">Tacita $2500</option>
+  <option value="Juguito Congelado,300">Juguito Congelado $300</option>
 </select>
 <button class="add-btn" onclick="agregarDeSelect('helado-select')">+</button>
 </div>
@@ -705,6 +731,7 @@ allProductsCompact = [
 { name: 'Alfajor', price: 2000, category: 'helado' },
 { name: 'Cono', price: 2500, category: 'helado' },
 { name: 'Tacita', price: 2500, category: 'helado' },
+{ name: 'Juguito Congelado', price: 300, category: 'helado' },
 // Botones rápidos
 { name: 'Dona', price: 700, category: 'postre' },
 { name: 'Torta Frita', price: 500, category: 'postre' },
@@ -885,7 +912,7 @@ addButton.classList.remove('activo');
 });
 
 // ✅ Comportamiento especial solo para Dona y Torta Frita
-const productosConCantidad = new Set(['Dona', 'Torta Frita']);
+const productosConCantidad = new Set(['Dona', 'Torta Frita', 'Girasoles']);
 
 // Guardar base text
 document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
