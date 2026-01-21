@@ -439,15 +439,19 @@ border: 1px solid rgba(0,129,201,0.3);
 <img src="https://i.postimg.cc/fVg0KsWv/sandwich-1f96a.png" alt="🥪" style="width:18px; vertical-align:-3px;"> Sándwich:
 </span>
 <select id="sand-select">
-<option value="Mila Simple,8000">Mila Simple $8000</option>
-<option value="Mila Completo,10000">Mila Completo $10000</option>
+<!-- Milanesas de Carne -->
+<option value="Mila Carne Simple,8000">mila carne Simple $8000</option>
+<option value="Mila Carne Completa,10000">mila carne Completa $10000</option>
+<!-- Milanesas de Pollo -->
+<option value="Mila Pollo Simple,8000">mila pollo Simple $8000</option>
+<option value="Mila Pollo Completa,10000">mila pollo Completa $10000</option>
+<!-- Otros -->
 <option value="S. Miga,5000">Miga $5000</option>
 <option value="Carlitos,6000">Carlitos $6000</option>
 <option value="Triples,7000">Triples $7000</option>
 </select>
 <button class="add-btn" onclick="agregarDeSelect('sand-select')">+</button>
-</div>
-<div class="producto-row">
+</div><div class="producto-row">
 <span>🥧 Tartas:</span>
 <select id="tarta-select">
 <option value="Tarta J&Q,11000">J&Q Entera $11000</option>
@@ -603,6 +607,18 @@ border: 1px solid rgba(0,129,201,0.3);
 </select>
 <button class="add-btn" onclick="agregarDeSelect('fruit-select')">+</button>
 </div>
+
+<div class="producto-row">
+<span>
+<span style="font-size:18px; vertical-align:-3px;">🍹</span> Batidos:
+</span>
+<select id="batido-select">
+<option value="Batido Banana,5000">Banana $5000</option>
+<option value="Batido Frutilla,5000">Frutilla $5000</option>
+</select>
+<button class="add-btn" onclick="agregarDeSelect('batido-select')">+</button>
+</div>
+
 </div>
 <div class="ticket">
 <h3>📝 Mesa <span id="nombre-mesa-ticket"></span></h3>
@@ -630,6 +646,7 @@ window.addEventListener('load', () => { navigator.serviceWorker.register('./sw.j
 let mesas = JSON.parse(localStorage.getItem('poli_vFinal')) || {};
 let historial = JSON.parse(localStorage.getItem('poli_historial')) || [];
 let mesaActual = null;
+let cierreEnviado = false;
 // === SWIPE MEJORADO ===
 let touchStartX = 0;
 let touchEndX = 0;
@@ -671,8 +688,10 @@ allProductsCompact = [
 { name: 'Pizza Napolitana', price: 11000, category: 'pizza' },
 { name: 'Media Pizza Napolitana', price: 7000, category: 'pizza' },
 // Comidas - Sándwiches
-{ name: 'Mila Simple', price: 8000, category: 'sándwich' },
-{ name: 'Mila Completo', price: 10000, category: 'sándwich' },
+{ name: 'Mila Carne Simple', price: 8000, category: 'sándwich' },
+{ name: 'Mila Carne Completa', price: 10000, category: 'sándwich' },
+{ name: 'Mila Pollo Simple', price: 8000, category: 'sándwich' },
+{ name: 'Mila Pollo Completa', price: 10000, category: 'sándwich' },
 { name: 'S. Miga', price: 5000, category: 'sándwich' },
 { name: 'Carlitos', price: 6000, category: 'sándwich' },
 { name: 'Triples', price: 7000, category: 'sándwich' },
@@ -732,6 +751,9 @@ allProductsCompact = [
 { name: 'Cono', price: 2500, category: 'helado' },
 { name: 'Tacita', price: 2500, category: 'helado' },
 { name: 'Juguito Congelado', price: 300, category: 'helado' },
+// Postres - Batidos
+{ name: 'Batido Banana', price: 5000, category: 'postre' },
+{ name: 'Batido Frutilla', price: 5000, category: 'postre' },
 // Botones rápidos
 { name: 'Dona', price: 700, category: 'postre' },
 { name: 'Torta Frita', price: 500, category: 'postre' },
@@ -1000,56 +1022,63 @@ save();
 actualizarTicket();
 renderizarMesas();
 }
+
+
 function verCierreCaja() {
-if (historial.length === 0) {
-alert("No hay ventas para cerrar.");
-return;
+  if (historial.length === 0) {
+    alert("No hay ventas para cerrar.");
+    return;
+  }
+
+  // 🔒 Evita enviar más de una vez
+  if (cierreEnviado) {
+    alert("✅ El cierre ya fue enviado.");
+    return;
+  }
+
+  const modal = document.getElementById('modal-caja');
+  const detalle = document.getElementById('caja-detalle');
+  let totalGral = 0;
+  detalle.innerHTML = "";
+  historial.forEach(v => {
+    totalGral += v.total;
+    detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between">
+      <span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b>
+    </div>`;
+  });
+  document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
+  modal.classList.remove('hidden');
+
+  // ✅ Marcar como enviado ANTES de enviar
+  cierreEnviado = true;
+
+  const urlBase = 'https://script.google.com/macros/s/AKfycbyHUZGbX4JcxDraow_pRIWhU5wbxXALjzYlIdV1lkuLukRagczEn4B4ihQZjSt9Bw7Xlw/exec';
+  const historialConItems = historial.map(v => ({
+    mesa: v.mesa,
+    total: v.total,
+    fecha: v.fecha,
+    items: v.items || {}
+  }));
+  const params = '?datos=' + encodeURIComponent(JSON.stringify(historialConItems));
+
+  fetch(urlBase + params, { method: 'POST', mode: 'no-cors' })
+    .catch(() => {
+      // Si falla, permitir reintentar
+      cierreEnviado = false;
+    });
 }
-const modal = document.getElementById('modal-caja');
-const detalle = document.getElementById('caja-detalle');
-let totalGral = 0;
-detalle.innerHTML = "";
-historial.forEach(v => {
-totalGral += v.total;
-detalle.innerHTML += `<div style="border-bottom:1px solid #eee; padding:8px; display:flex; justify-content:space-between">
-<span>Mesa ${v.mesa} (${v.fecha})</span><b>$${v.total}</b>
-</div>`;
-});
-document.getElementById('caja-total').innerText = "TOTAL DÍA: $" + totalGral;
-modal.classList.remove('hidden');
-// ✅ ENVIAR A GOOGLE SHEETS
-const urlBase = 'https://script.google.com/macros/s/AKfycbyHUZGbX4JcxDraow_pRIWhU5wbxXALjzYlIdV1lkuLukRagczEn4B4ihQZjSt9Bw7Xlw/exec';
-// Asegurar que cada venta tenga 'items'
-const historialConItems = historial.map(v => {
-// Si ya tiene items (por la nueva función cobrar), usarlo
-// Si no, dejar vacío
-return {
-mesa: v.mesa,
-total: v.total,
-fecha: v.fecha,
-items: v.items || {}
-};
-});
-const params = '?datos=' + encodeURIComponent(JSON.stringify(historialConItems));
-fetch(urlBase + params, {
-method: 'POST',
-mode: 'no-cors'
-})
-.then(() => {
-console.log("✅ Cierre enviado a Google Sheets");
-})
-.catch(err => {
-console.error("❌ Error al enviar cierre:", err);
-// Opcional: alert("No se pudo enviar el cierre a la nube.");
-});
-}
+
+
+
+
 function reiniciarCaja() {
-if (confirm("¿Limpiar historial y todas las mesas?")) {
-historial = [];
-mesas = {};
-save();
-location.reload();
-}
+  if (confirm("¿Limpiar historial y todas las mesas?")) {
+    historial = [];
+    mesas = {};
+    cierreEnviado = false; // ←←← ESTA LÍNEA ES IMPORTANTE
+    save();
+    location.reload();
+  }
 }
 function reabrir() { mesas[mesaActual].cobrada = false; save(); actualizarTicket(); renderizarMesas(); }
 function liberar() { if(confirm("¿Limpiar mesa?")) { delete mesas[mesaActual]; save(); location.reload(); } }
