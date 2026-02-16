@@ -471,15 +471,17 @@ border: 1px solid rgba(0,129,201,0.3);
 
 <select id="empa-select">
   <option value="Carne,1500">Carne $1500</option>
-  <option value="Pollo,1500">Pollo $1500</option>
+ <!--<option value="Pollo,1500">Pollo $1500</option>-->
   <option value="Media Docena Carne,9000">Media Docena Carne $9000</option>
-  <option value="Media Docena Pollo,9000">Media Docena Pollo $9000</option>
+ <!-- <option value="Media Docena Pollo,9000">Media Docena Pollo $9000</option>-->
   <option value="Docena Carne,18000">Docena Carne $18000</option>
-  <option value="Docena Pollo,18000">Docena Pollo $18000</option>
+ <!--<option value="Docena Pollo,18000">Docena Pollo $18000</option>-->
 </select>
 
 <button class="add-btn" onclick="agregarDeSelect('empa-select')">+</button>
 </div>
+
+<!-- 
 <div class="producto-row">
 <span>
 <img src="https://i.postimg.cc/P5HvG3DC/hot-dog-1f32d.png" alt="🌭" style="width:18px; vertical-align:-3px;"> Panchos:
@@ -490,6 +492,8 @@ border: 1px solid rgba(0,129,201,0.3);
 </select>
 <button class="add-btn" onclick="agregarDeSelect('pancho-select')">+</button>
 </div>
+-->
+
 <!-- Primera fila: Dona, T. Frita, Girasoles -->
 <!-- Botones rápidos corregidos -->
 <div class="fast-btn-group fixed-row">
@@ -501,9 +505,11 @@ border: 1px solid rgba(0,129,201,0.3);
   </button>
 </div>
 <div class="fast-btn-group fixed-row" style="margin-top: 8px;">
-  <button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Picada', 20000)">
+  <!--
+<button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Picada', 20000)">
     <img src="https://i.postimg.cc/d0rqqwKM/picada.png" alt="🧀" style="width:23px; vertical-align:-7px;"> Picada $20k
   </button>
+-->
   <button class="fast-btn fixed-size" data-product="Girasoles" onclick="agregarProd('Girasoles', 500)">
     🌻 Girasoles $500
   </button>
@@ -611,6 +617,7 @@ border: 1px solid rgba(0,129,201,0.3);
 <button class="add-btn" onclick="agregarDeSelect('fruit-select')">+</button>
 </div>
 
+<!--
 <div class="producto-row">
 <span>
 <span style="font-size:18px; vertical-align:-3px;">🍹</span> Batidos:
@@ -621,7 +628,7 @@ border: 1px solid rgba(0,129,201,0.3);
 </select>
 <button class="add-btn" onclick="agregarDeSelect('batido-select')">+</button>
 </div>
-
+-->
 </div>
 <div class="ticket">
 <h3>📝 Mesa <span id="nombre-mesa-ticket"></span></h3>
@@ -711,8 +718,8 @@ allProductsCompact = [
 { name: 'Media Docena Empanadas', price: 6500, category: 'empanada' },
 { name: 'Docena Empanadas', price: 13000, category: 'empanada' },
 // Comidas - Panchos
-{ name: 'Pancho Simple', price: 1500, category: 'pancho' },
-{ name: 'Combo Pancho+Lata', price: 3000, category: 'pancho' },
+//{ name: 'Pancho Simple', price: 1500, category: 'pancho' },
+//{ name: 'Combo Pancho+Lata', price: 3000, category: 'pancho' },
 // Bebidas - Gaseosas
 { name: 'Pepsi 500ml', price: 2000, category: 'gaseosa' },
 { name: 'Pepsi Lata', price: 2000, category: 'gaseosa' },
@@ -757,12 +764,11 @@ allProductsCompact = [
 { name: 'Tacita', price: 2500, category: 'helado' },
 { name: 'Juguito Congelado', price: 300, category: 'helado' },
 // Postres - Batidos
-{ name: 'Batido Banana', price: 5000, category: 'postre' },
-{ name: 'Batido Frutilla', price: 5000, category: 'postre' },
+
 // Botones rápidos
 { name: 'Dona', price: 700, category: 'postre' },
 { name: 'Torta Frita', price: 500, category: 'postre' },
-{ name: 'Picada', price: 20000, category: 'comida' },
+
 { name: 'Jarra Hielo', price: 1000, category: 'bebida' },
 { name: 'Agua Caliente', price: 500, category: 'bebida' }
 ];
