@@ -508,18 +508,26 @@ border: 1px solid rgba(0,129,201,0.3);
 
 
   
-<button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Combo 1:Pizza común + Tarta J&Q', 18000)">
-    <img src="https://i.postimg.cc/FYnJZvFV/slice-of-pizza-1f355.png" alt="🍕" style="width:23px; vertical-align:-7px;">pizza + tartaJ&Q $18k
-  </button>
+<!-- Combos arriba, Girasoles abajo -->
+<div style="display:flex; flex-wrap:wrap; gap:8px; width:100%;">
+  
+  <!-- Fila 1: Combos -->
+  <div style="display:flex; gap:8px; flex-wrap:wrap; width:100%; margin-bottom:6px;">
+    <button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Combo 1:Pizza común + Tarta J&Q', 18000)">
+      <img src="https://i.postimg.cc/FYnJZvFV/slice-of-pizza-1f355.png" alt="🍕" style="width:23px; vertical-align:-7px;"> pizza + tartaJ&Q $18k
+    </button>
 
+    <button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Combo 2: Pizza Especial + Papas', 15000)">
+      <img src="https://i.postimg.cc/FYnJZvFV/slice-of-pizza-1f355.png" alt="🍕" style="width:23px; vertical-align:-7px;"> pizza esp + papas $15k
+    </button>
+  </div>
 
-  <button class="fast-btn fixed-size" data-product="Picada" onclick="agregarProd('Combo 2: Pizza Especial + Papas', 15000)">
-    <img src="https://i.postimg.cc/FYnJZvFV/slice-of-pizza-1f355.png" alt="🍕" style="width:23px; vertical-align:-7px;">pizza esp + papas $15k
-  </button>
-  <br style="clear:both; line-height:8px;">
+  <!-- Fila 2: Girasoles -->
   <button class="fast-btn fixed-size" data-product="Girasoles" onclick="agregarProd('Girasoles', 500)">
     🌻 Girasoles $500
   </button>
+
+</div>
 </div>
 </div>
 <div class="categoria-box">
@@ -1162,6 +1170,7 @@ document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
 </body>
 
 </html>
+
 
 
 
