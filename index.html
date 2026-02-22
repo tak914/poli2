@@ -623,11 +623,11 @@ border: 1px solid rgba(0,129,201,0.3);
 </div>
 <div class="producto-row">
 <span>
-<img src="https://i.postimg.cc/mrCbbBG4/ensalada-de-fruta.png" alt="🍧" style="width:24px; vertical-align:-5px;"> Ens. Fruta:
+<img src="https://i.postimg.cc/mrCbbBG4/ensalada-de-fruta.png" alt="🍧" style="width:24px; vertical-align:-5px;"> tiramisú/chocotorta:
 </span>
 <select id="fruit-select">
-<option value="Ens. Fruta 250ml,2000">250ml $2000</option>
-<option value="Ens. Fruta 500ml,4000">500ml $4000</option>
+<option value="Tiramisú,2000">$2000</option>
+<option value="Chocotorta,2500">$2500</option>
 </select>
 <button class="add-btn" onclick="agregarDeSelect('fruit-select')">+</button>
 </div>
@@ -769,8 +769,8 @@ allProductsCompact = [
 { name: 'Jarra Fernet', price: 8000, category: 'vino' },
 { name: 'Jarra Gancia', price: 6000, category: 'vino' },
 // Postres - Ensalada de fruta
-{ name: 'Ens. Fruta 250ml', price: 2000, category: 'postre' },
-{ name: 'Ens. Fruta 500ml', price: 4000, category: 'postre' },
+{ name: 'tiramisu', price: 2000, category: 'postre' },
+{ name: 'chocotorta', price: 2500, category: 'postre' },
 // Postres - Helados
 { name: 'Palito de Agua', price: 600, category: 'helado' },
 { name: 'Bombón', price: 1500, category: 'helado' },
@@ -1170,6 +1170,7 @@ document.querySelectorAll('.fast-btn[data-product]').forEach(btn => {
 </body>
 
 </html>
+
 
 
 
